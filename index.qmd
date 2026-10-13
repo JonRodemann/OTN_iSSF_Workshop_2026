@@ -4,7 +4,7 @@ format: html
 
 # *From downloads to discussions: leveraging Yet Another Positioning Solver (YAPS) and modern movement analyses to transform raw telemetry data into interpretable results*
 
-## Main-conveners:
+## Main conveners:
 
 Jonathan Rodemann (National Center for Ecological Analysis and Synthesis, USA)
 
@@ -54,4 +54,6 @@ RSF using broad-scale acoustic telemetry: [Rodemann et al., 2025. Hierarchical h
 
 YAPS: Costa et al. 2026. Finding a home in a fragmented world: Multi-scale habitat selection of Spotted Seatrout in an area of seagrass recovery. *in prep*.\
 
+### Instructions to download this course:
 
+To easily download the material for this course, type usethis::use_course("https://github.com/JonRodemann/OTN_iSSF_Workshop_2026/archive/refs/heads/main.zip") into your R console. Download to your desktop and you can then open up the project in a new RStudio Window.
