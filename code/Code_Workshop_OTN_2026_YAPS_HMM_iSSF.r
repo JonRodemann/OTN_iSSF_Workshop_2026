@@ -396,7 +396,7 @@ id20$tottime <- as.numeric(id20$tott)
 id20_30 <- id20 %>% dplyr::filter(tottime >= 1800)
 nrow(as.data.frame(unique(id20_30$ID))) #number of unique tracks kept through all of the filtering - 59
 
-##We are not able to fit some HMMs! To do this, we need to first prep the data and then remove missing data
+##We are now able to fit some HMMs! To do this, we need to first prep the data and then remove missing data
 
 interp_df_30 <- id20_30 %>% arrange(ID, ts)
 # prepData: coordinate names are "x" and "y" in our frame
