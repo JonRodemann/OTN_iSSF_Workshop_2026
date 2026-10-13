@@ -1,5 +1,8 @@
 ---
-format: html
+format: 
+  html:
+    toc: true
+    theme: darkly
 ---
 
 # *From downloads to discussions: leveraging Yet Another Positioning Solver (YAPS) and modern movement analyses to transform raw telemetry data into interpretable results*

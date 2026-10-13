@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>YAPS and Data filtering – OTN Symposium 2026 iSSF Workshop</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-2fef5ea3f8957b3e4ecc936fc74692ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-c09f7992e7ad36c4a4c784d127ab2153.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">OTN Symposium 2026 iSSF Workshop</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./Rinst.html"> 
+<span class="menu-text">R &amp; Rstudio</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link active" href="./YAPS.html" aria-current="page"> 
+<span class="menu-text">YAPS and filtering</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Enviro.html"> 
+<span class="menu-text">Environmental Variables</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./HMM.html"> 
+<span class="menu-text">Hidden Markov Models</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./GAM.html"> 
+<span class="menu-text">Integrated Step Selection Functions</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#yaps-and-data-filtering" id="toc-yaps-and-data-filtering" class="nav-link active" data-scroll-target="#yaps-and-data-filtering">YAPS and Data filtering</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">Data</a></li>
+  <li><a href="#yaps-position-calculations" id="toc-yaps-position-calculations" class="nav-link" data-scroll-target="#yaps-position-calculations">YAPS position calculations</a></li>
+  <li><a href="#data-filtering-exploration-and-graphing" id="toc-data-filtering-exploration-and-graphing" class="nav-link" data-scroll-target="#data-filtering-exploration-and-graphing">Data filtering, exploration and graphing</a></li>
+  <li><a href="#decision-on-allowable-error-and-abacus-plot" id="toc-decision-on-allowable-error-and-abacus-plot" class="nav-link" data-scroll-target="#decision-on-allowable-error-and-abacus-plot">Decision on allowable error and abacus plot</a></li>
+  <li><a href="#mapping" id="toc-mapping" class="nav-link" data-scroll-target="#mapping">Mapping!</a></li>
+  <li><a href="#calculating-tracks" id="toc-calculating-tracks" class="nav-link" data-scroll-target="#calculating-tracks">Calculating tracks</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">YAPS and Data filtering</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Jonathan Rodemann, Sophia Costa </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="yaps-and-data-filtering" class="level2">
+<h2 class="anchored" data-anchor-id="yaps-and-data-filtering">YAPS and Data filtering</h2>
+<p>This vignette uses the yaps package to calculate fish position and then goes over our process to filter the data. We then do some data mapping and exploration.</p>
+<p><a href="code/Code_Workshop_OTN_2026_YAPS_HMM_iSSF.R">R script</a></p>
+</section>
+<section id="data" class="level2">
+<h2 class="anchored" data-anchor-id="data">Data</h2>
+<p>The data used for this example was collected by Rodemann, Costa et al.&nbsp;in Florida Bay. Acoustic telemetry data is from tagged spotted seatrout and environmental data is from field surveys done by Rodemann, Costa and team.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="maps/Array_map.png" class="img-fluid figure-img"></p>
+<figcaption>Map of YAPS Array in Rankin Basin</figcaption>
+</figure>
+</div>
+</section>
+<section id="yaps-position-calculations" class="level2">
+<h2 class="anchored" data-anchor-id="yaps-position-calculations">YAPS position calculations</h2>
+<p>This is the general workflow for syncing receivers and running tracks in YAPS. We won’t be running this code in this workshop and in fact, this code does not work because the syncing fails. In reality, you need to play around with your sync data (including splitting up the time periods if there are “blackouts”, possibly removing receivers, and other adjustments) for the sync model to be successful. We will pick up the workshop with the positions that were calculated by the developer of YAPS (WOW!), Henrik Baktoft.</p>
+<div style="font-style: italic;">
+<p>#load libraries<br>
+#Install and load required libraries</p>
+<p>install.packages(c(‘tidyverse’, ‘devtools’, ‘TMB’))<br>
+library(devtools)<br>
+library(tidyverse)<br>
+library(TMB)<br>
+devtools::install_github(“baktoft/yaps”)<br>
+library(yaps)<br>
+options(digits.secs = 3)</p>
+<p>#test to make sure YAPS will work</p>
+<p>testYaps()</p>
+<p>#load data</p>
+<p>vue &lt;- data.table::fread(‘data/detections.csv’, fill=TRUE)<br>
+hydros &lt;- data.table::fread(‘data/hydros.csv’, fill=TRUE)<br>
+detections &lt;- prepDetections(raw_dat = vue, type=‘vemco_vue’)<br>
+detections &lt;- detections %&gt;% dplyr::filter(!is.na(frac))</p>
+<p>#now we have our 2 datasets needed!</p>
+<p>#sync hydrophones/ #set parameters</p>
+<p>max_epo_diff &lt;- 140 #Should be a little less than half of your shortest sync tag delay (ours are 6 - 10 minute)<br>
+min_hydros &lt;- 4 #minimum amount of hydrophones needed for each sync tag ping to be heard on. Start high, then go low<br>
+time_keeper_idx &lt;- 13 #Receiver with the “best clock”<br>
+fixed_hydros_idx &lt;- c(3, 7:8, 11, 13:17, 20:21) #Receivers that have the best known positions. The more, the better<br>
+n_offset_day &lt;- 2 #1 or 2<br>
+n_ss_day &lt;- 2 #number of times you want the model to calculate speed of sound a day. 2 is good, best to use water temp if you have it<br>
+keep_rate &lt;- 75 #number of sync tag detections for each hydro X offset_idx combinations to keep. Keeps the model doable</p>
+<p>#compile list of dataframes</p>
+<p>RYAPS &lt;- list(hydros, detections)<br>
+names(RYAPS) &lt;- c(‘hydros’, ‘detections’)<br>
+RYAPS$hydros$sync_tag &lt;- as.double(RYAPS$hydros$sync_tag)<br>
+RYAPS$detections$tag &lt;- as.integer(RYAPS$detections$tag)<br>
+RYAPS$detections$epo &lt;- as.integer(RYAPS$detections$epo)<br>
+RYAPS$detections$serial &lt;- as.integer(RYAPS$detections$serial)<br>
+</p>
+<p>#compile data for syncing</p>
+<p>inp_sync &lt;- getInpSync(sync_dat = RYAPS, max_epo_diff, min_hydros, time_keeper_idx, fixed_hydros_idx, n_offset_day, n_ss_day, keep_rate)</p>
+<p>#check if it is good</p>
+<p>getSyncCoverage(inp_sync, plot=T)</p>
+<p>#we are good. Let’s try syncing</p>
+<p>sync_model &lt;- getSyncModel(inp_sync, silent=TRUE)</p>
+<p>#check quality of synchronization</p>
+<p>plotSyncModelResids(sync_model, by=‘overall’)<br>
+plotSyncModelResids(sync_model, by=‘sync_tag’)<br>
+plotSyncModelResids(sync_model, by=‘hydro’)<br>
+plotSyncModelCheck(sync_model, by=“sync_bin_sync”)<br>
+plotSyncModelCheck(sync_model, by=“sync_bin_hydro”)<br>
+plotSyncModelCheck(sync_model, by=“sync_tag”)<br>
+plotSyncModelCheck(sync_model, by=“hydro”)</p>
+<p>#success! there is only a problem of 6 using SHYAPS1. I think it is fine. save it</p>
+<p>save(sync_model, file = ‘sync_model_4’)</p>
+<p>#apply sync model to detection data</p>
+<p>detections_synced &lt;- applySync(toa=RYAPS$detections, hydros=RYAPS$hydros, sync_model)</p>
+<p>#Now that you have the sync model, run the tracks<br>
+#use the estimated positions of hydros</p>
+<p>hydros_yaps &lt;- data.table::data.table(sync_model$pl$TRUE_H)<br>
+colnames(hydros_yaps) &lt;- c(‘hx’,‘hy’,‘hz’)</p>
+<p>#specify focal tag</p>
+<p>focal_tag &lt;- 34507<br>
+rbi_min &lt;- 20<br>
+rbi_max &lt;- 40</p>
+<p>#extract relevant tag data from detections</p>
+<p>synced_dat_34507 &lt;- detections_synced[tag == focal_tag]</p>
+<p>#compile TOA matrix</p>
+<p>toa_YAPS_34507 &lt;- getToaYaps(synced_dat_34507, hydros_yaps, rbi_min, rbi_max, pingType=‘rbi’)</p>
+<p>#compile all input data needed</p>
+<p>inp_YAPS &lt;- getInp(hydros_yaps, toa_YAPS_34507, E_dist=“Mixture”, n_ss=3, pingType=“rbi”, sdInits=1, rbi_min=rbi_min, rbi_max=rbi_max, ss_data_what=“est”, ss_data=0)</p>
+<p>inp_YAPS$datTmb$rbi_min<br>
+inp_YAPS$params$top<br>
+min(diff(inp_YAPS$params$top))<br>
+checkInp(inp_YAPS)</p>
+<p>#run YAPS!</p>
+<p>yaps_out_34507 &lt;- runYaps(inp_SAPS, silent=F)</p>
+<p>plotYaps(yaps_out_34507)</p>
+</div>
+<p>#This is where we will leave it for the YAPS run. We encourage all of you if you are interested to explore the package, as it can even run simulations! Now onto the data exploration and filtering</p>
+</section>
+<section id="data-filtering-exploration-and-graphing" class="level2">
+<h2 class="anchored" data-anchor-id="data-filtering-exploration-and-graphing">Data filtering, exploration and graphing</h2>
+<p>In this section, we will look at the data, filter it based on the positional error from the YAPS algorithm, explore the data, and thengraph it as an abacus plot (yay!) as well as on a map. Then we will prep it for the HMM analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load in libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(splitstackshape)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(chron)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggmap)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Loading required package: ggplot2</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Google's Terms of Service: &lt;https://mapsplatform.google.com&gt;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="do">##   Stadia Maps' Terms of Service: &lt;https://stadiamaps.com/terms-of-service&gt;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="do">##   OpenStreetMap's Tile Usage Policy: &lt;https://operations.osmfoundation.org/policies/tiles&gt;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Please cite ggmap if you use it! Use `citation("ggmap")` for details.</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Warning: package 'sf' was built under R version 4.5.2</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="do">## Linking to GEOS 3.13.0, GDAL 3.8.5, PROJ 9.5.1; sf_use_s2() is TRUE</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="do">## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ dplyr     1.1.4     ✔ readr     2.1.5</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ forcats   1.0.1     ✔ stringr   1.5.2</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ lubridate 1.9.4     ✔ tibble    3.3.0</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ purrr     1.1.0     ✔ tidyr     1.3.1</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="do">## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ readr::col_factor()  masks scales::col_factor()</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ lubridate::days()    masks chron::days()</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ purrr::discard()     masks scales::discard()</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ dplyr::filter()      masks stats::filter()</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ lubridate::hours()   masks chron::hours()</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ dplyr::lag()         masks stats::lag()</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ lubridate::minutes() masks chron::minutes()</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ lubridate::seconds() masks chron::seconds()</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ lubridate::years()   masks chron::years()</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> sfheadersdata <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'data/fish_positions.csv'</span>)</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="do">## New names:</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 31389 Columns: 11</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="do">## ── Column specification</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="do">## ──────────────────────────────────────────────────────── Delimiter: "," dbl</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="do">## (8): ...1, tag, x, y, x_sd, y_sd, nobs, k lgl (2): z, z_sd dttm (1): ts</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="do">## Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="do">## • `` -&gt; `...1`</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 6 × 11</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="do">##    ...1   tag ts                        x        y z      x_sd  y_sd z_sd   nobs</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;dbl&gt; &lt;dbl&gt; &lt;dttm&gt;                &lt;dbl&gt;    &lt;dbl&gt; &lt;lgl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;dbl&gt;</span></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     1 34518 2021-12-22 11:09:13 518709. 2778823. NA    0.724  1.54 NA        3</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     2 34518 2021-12-22 11:09:54 518710. 2778823. NA    1.26   1.65 NA        1</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     3 34518 2021-12-22 11:10:33 518711. 2778822. NA    1.18   1.52 NA        1</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     4 34518 2021-12-22 11:11:05 518712. 2778821. NA    0.586  1.18 NA        5</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     5 34518 2021-12-22 11:11:47 518711. 2778819. NA    1.06   1.10 NA        2</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     6 34518 2021-12-22 11:12:26 518711. 2778816. NA    0.539  1.02 NA        3</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="do">## # ℹ 1 more variable: k &lt;dbl&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The columns of this data include tag (last digits of tag number), x (longitude in UTM), y (latitude in UTM), x_sd (standard deviation (error) of longitude in meters), y_sd (standard deviation (error) of latitude in meters), z_sd (standard deviation (error) of depth in meters - not applicable), nobs (number of receivers detected on), and k (positions that represent a track)</p>
+</section>
+<section id="decision-on-allowable-error-and-abacus-plot" class="level2">
+<h2 class="anchored" data-anchor-id="decision-on-allowable-error-and-abacus-plot">Decision on allowable error and abacus plot</h2>
+<p>The first big decision is determining how much error is acceptable within the positions calculated with the YAPS algorithm. This will play into the resolution of your environmental variables as well as how well you can interpret your results. In general, it is a trade-off between maximizing the amount of data while minimizing the amount of error. We are filtering it at a total error of 10 m, which will come into play with our environmental variables.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#make a column with total error</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">E =</span> <span class="fu">sqrt</span>(x_sd<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> y_sd<span class="sc">^</span><span class="dv">2</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co">#filter by error. We are going to filter out anything with an error greater than 10 m. This will have to match your environmental variables later</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>dat_10 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(E <span class="sc">&lt;</span> <span class="dv">10</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co">#summary stats</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co">#number of positions per fish</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>dat_10 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(tag) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">n =</span> <span class="fu">n</span>())</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 3 × 2</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="do">##     tag     n</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;dbl&gt; &lt;int&gt;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 34501  4036</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 34507  8427</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 34518  3287</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">#abacus plot for positions</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>dat_10<span class="sc">$</span>ts <span class="ot">&lt;-</span> <span class="fu">as.POSIXct</span>(dat_10<span class="sc">$</span>ts, <span class="at">format =</span> <span class="st">'%Y-%m-%dT%H:%M:%OS'</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Break up the new datetime column into  a date, and a time</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> dat_10</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Date_Time2 <span class="ot">&lt;-</span> data<span class="sc">$</span>ts</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">cSplit</span>(data, <span class="st">"Date_Time2"</span>, <span class="at">sep =</span> <span class="st">" "</span>, <span class="at">type.convert =</span> F)</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="do">##     ...1   tag                  ts        x       y      z   x_sd   y_sd   z_sd</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;              &lt;POSc&gt;    &lt;num&gt;   &lt;num&gt; &lt;lgcl&gt;  &lt;num&gt;  &lt;num&gt; &lt;lgcl&gt;</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     1 34518 2021-12-22 11:09:13 518708.7 2778823     NA 0.7236 1.5422     NA</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     2 34518 2021-12-22 11:09:54 518709.7 2778823     NA 1.2561 1.6490     NA</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     3 34518 2021-12-22 11:10:33 518710.7 2778822     NA 1.1799 1.5173     NA</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     4 34518 2021-12-22 11:11:05 518711.5 2778821     NA 0.5856 1.1773     NA</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     5 34518 2021-12-22 11:11:47 518710.9 2778819     NA 1.0556 1.0991     NA</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     6 34518 2021-12-22 11:12:26 518710.6 2778816     NA 0.5386 1.0217     NA</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="do">##     nobs     k        E Date_Time2_1    Date_Time2_2</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;    &lt;num&gt;       &lt;char&gt;          &lt;char&gt;</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     3  6833 1.703519   2021-12-22 11:09:13.605054</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     1  6833 2.072918   2021-12-22 11:09:54.728734</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     1  6833 1.922073   2021-12-22 11:10:33.044458</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     5  6833 1.314900   2021-12-22 11:11:05.742057</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     2  6833 1.523913   2021-12-22  11:11:47.25653</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     3  6833 1.154972   2021-12-22 11:12:26.354912</span></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="co"># Rename columns so they make sense, it'll just be your last 2 column numbers, in this case the 15th and 16th column s</span></span>
+<span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data)[<span class="dv">12</span><span class="sc">:</span><span class="dv">14</span>]<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">'E'</span>, <span class="st">"Date"</span>, <span class="st">"Time"</span>)</span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="do">##     ...1   tag                  ts        x       y      z   x_sd   y_sd   z_sd</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;              &lt;POSc&gt;    &lt;num&gt;   &lt;num&gt; &lt;lgcl&gt;  &lt;num&gt;  &lt;num&gt; &lt;lgcl&gt;</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     1 34518 2021-12-22 11:09:13 518708.7 2778823     NA 0.7236 1.5422     NA</span></span>
+<span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     2 34518 2021-12-22 11:09:54 518709.7 2778823     NA 1.2561 1.6490     NA</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     3 34518 2021-12-22 11:10:33 518710.7 2778822     NA 1.1799 1.5173     NA</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     4 34518 2021-12-22 11:11:05 518711.5 2778821     NA 0.5856 1.1773     NA</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     5 34518 2021-12-22 11:11:47 518710.9 2778819     NA 1.0556 1.0991     NA</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     6 34518 2021-12-22 11:12:26 518710.6 2778816     NA 0.5386 1.0217     NA</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="do">##     nobs     k        E       Date            Time</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;    &lt;num&gt;     &lt;char&gt;          &lt;char&gt;</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     3  6833 1.703519 2021-12-22 11:09:13.605054</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     1  6833 2.072918 2021-12-22 11:09:54.728734</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     1  6833 1.922073 2021-12-22 11:10:33.044458</span></span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     5  6833 1.314900 2021-12-22 11:11:05.742057</span></span>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     2  6833 1.523913 2021-12-22  11:11:47.25653</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     3  6833 1.154972 2021-12-22 11:12:26.354912</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="co"># Then I repeat this and parse the date into year, month, and day (then hour, minute, second), so I can easily subset by year</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="co"># Copy date to parse out, maintain original date</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Date2 <span class="ot">&lt;-</span> data<span class="sc">$</span>Date</span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>data<span class="ot">&lt;-</span><span class="fu">cSplit</span>(data, <span class="st">"Date2"</span>, <span class="at">sep =</span> <span class="st">"-"</span>, <span class="at">type.convert =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="do">##     ...1   tag                  ts        x       y      z   x_sd   y_sd   z_sd</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;              &lt;POSc&gt;    &lt;num&gt;   &lt;num&gt; &lt;lgcl&gt;  &lt;num&gt;  &lt;num&gt; &lt;lgcl&gt;</span></span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     1 34518 2021-12-22 11:09:13 518708.7 2778823     NA 0.7236 1.5422     NA</span></span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     2 34518 2021-12-22 11:09:54 518709.7 2778823     NA 1.2561 1.6490     NA</span></span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     3 34518 2021-12-22 11:10:33 518710.7 2778822     NA 1.1799 1.5173     NA</span></span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     4 34518 2021-12-22 11:11:05 518711.5 2778821     NA 0.5856 1.1773     NA</span></span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     5 34518 2021-12-22 11:11:47 518710.9 2778819     NA 1.0556 1.0991     NA</span></span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     6 34518 2021-12-22 11:12:26 518710.6 2778816     NA 0.5386 1.0217     NA</span></span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a><span class="do">##     nobs     k        E       Date            Time Date2_1 Date2_2 Date2_3</span></span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;    &lt;num&gt;     &lt;char&gt;          &lt;char&gt;  &lt;char&gt;  &lt;char&gt;  &lt;char&gt;</span></span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     3  6833 1.703519 2021-12-22 11:09:13.605054    2021      12      22</span></span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     1  6833 2.072918 2021-12-22 11:09:54.728734    2021      12      22</span></span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     1  6833 1.922073 2021-12-22 11:10:33.044458    2021      12      22</span></span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     5  6833 1.314900 2021-12-22 11:11:05.742057    2021      12      22</span></span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     2  6833 1.523913 2021-12-22  11:11:47.25653    2021      12      22</span></span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     3  6833 1.154972 2021-12-22 11:12:26.354912    2021      12      22</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data)[<span class="dv">15</span><span class="sc">:</span><span class="dv">17</span>]<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"Year"</span>, <span class="st">"Month"</span>, <span class="st">"Day"</span>)</span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a><span class="do">##     ...1   tag                  ts        x       y      z   x_sd   y_sd   z_sd</span></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;              &lt;POSc&gt;    &lt;num&gt;   &lt;num&gt; &lt;lgcl&gt;  &lt;num&gt;  &lt;num&gt; &lt;lgcl&gt;</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     1 34518 2021-12-22 11:09:13 518708.7 2778823     NA 0.7236 1.5422     NA</span></span>
+<span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     2 34518 2021-12-22 11:09:54 518709.7 2778823     NA 1.2561 1.6490     NA</span></span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     3 34518 2021-12-22 11:10:33 518710.7 2778822     NA 1.1799 1.5173     NA</span></span>
+<span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     4 34518 2021-12-22 11:11:05 518711.5 2778821     NA 0.5856 1.1773     NA</span></span>
+<span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     5 34518 2021-12-22 11:11:47 518710.9 2778819     NA 1.0556 1.0991     NA</span></span>
+<span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     6 34518 2021-12-22 11:12:26 518710.6 2778816     NA 0.5386 1.0217     NA</span></span>
+<span id="cb2-101"><a href="#cb2-101" aria-hidden="true" tabindex="-1"></a><span class="do">##     nobs     k        E       Date            Time   Year  Month    Day</span></span>
+<span id="cb2-102"><a href="#cb2-102" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;    &lt;num&gt;     &lt;char&gt;          &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt;</span></span>
+<span id="cb2-103"><a href="#cb2-103" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     3  6833 1.703519 2021-12-22 11:09:13.605054   2021     12     22</span></span>
+<span id="cb2-104"><a href="#cb2-104" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     1  6833 2.072918 2021-12-22 11:09:54.728734   2021     12     22</span></span>
+<span id="cb2-105"><a href="#cb2-105" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     1  6833 1.922073 2021-12-22 11:10:33.044458   2021     12     22</span></span>
+<span id="cb2-106"><a href="#cb2-106" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     5  6833 1.314900 2021-12-22 11:11:05.742057   2021     12     22</span></span>
+<span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     2  6833 1.523913 2021-12-22  11:11:47.25653   2021     12     22</span></span>
+<span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     3  6833 1.154972 2021-12-22 11:12:26.354912   2021     12     22</span></span>
+<span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Time2 <span class="ot">&lt;-</span> data<span class="sc">$</span>Time</span>
+<span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span><span class="fu">cSplit</span>(data, <span class="st">"Time2"</span>, <span class="at">sep =</span> <span class="st">":"</span>, <span class="at">type.convert =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span>
+<span id="cb2-114"><a href="#cb2-114" aria-hidden="true" tabindex="-1"></a><span class="do">##     ...1   tag                  ts        x       y      z   x_sd   y_sd   z_sd</span></span>
+<span id="cb2-115"><a href="#cb2-115" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;              &lt;POSc&gt;    &lt;num&gt;   &lt;num&gt; &lt;lgcl&gt;  &lt;num&gt;  &lt;num&gt; &lt;lgcl&gt;</span></span>
+<span id="cb2-116"><a href="#cb2-116" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     1 34518 2021-12-22 11:09:13 518708.7 2778823     NA 0.7236 1.5422     NA</span></span>
+<span id="cb2-117"><a href="#cb2-117" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     2 34518 2021-12-22 11:09:54 518709.7 2778823     NA 1.2561 1.6490     NA</span></span>
+<span id="cb2-118"><a href="#cb2-118" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     3 34518 2021-12-22 11:10:33 518710.7 2778822     NA 1.1799 1.5173     NA</span></span>
+<span id="cb2-119"><a href="#cb2-119" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     4 34518 2021-12-22 11:11:05 518711.5 2778821     NA 0.5856 1.1773     NA</span></span>
+<span id="cb2-120"><a href="#cb2-120" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     5 34518 2021-12-22 11:11:47 518710.9 2778819     NA 1.0556 1.0991     NA</span></span>
+<span id="cb2-121"><a href="#cb2-121" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     6 34518 2021-12-22 11:12:26 518710.6 2778816     NA 0.5386 1.0217     NA</span></span>
+<span id="cb2-122"><a href="#cb2-122" aria-hidden="true" tabindex="-1"></a><span class="do">##     nobs     k        E       Date            Time   Year  Month    Day Time2_1</span></span>
+<span id="cb2-123"><a href="#cb2-123" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;    &lt;num&gt;     &lt;char&gt;          &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt;  &lt;char&gt;</span></span>
+<span id="cb2-124"><a href="#cb2-124" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     3  6833 1.703519 2021-12-22 11:09:13.605054   2021     12     22      11</span></span>
+<span id="cb2-125"><a href="#cb2-125" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     1  6833 2.072918 2021-12-22 11:09:54.728734   2021     12     22      11</span></span>
+<span id="cb2-126"><a href="#cb2-126" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     1  6833 1.922073 2021-12-22 11:10:33.044458   2021     12     22      11</span></span>
+<span id="cb2-127"><a href="#cb2-127" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     5  6833 1.314900 2021-12-22 11:11:05.742057   2021     12     22      11</span></span>
+<span id="cb2-128"><a href="#cb2-128" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     2  6833 1.523913 2021-12-22  11:11:47.25653   2021     12     22      11</span></span>
+<span id="cb2-129"><a href="#cb2-129" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     3  6833 1.154972 2021-12-22 11:12:26.354912   2021     12     22      11</span></span>
+<span id="cb2-130"><a href="#cb2-130" aria-hidden="true" tabindex="-1"></a><span class="do">##    Time2_2   Time2_3</span></span>
+<span id="cb2-131"><a href="#cb2-131" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;char&gt;    &lt;char&gt;</span></span>
+<span id="cb2-132"><a href="#cb2-132" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:      09 13.605054</span></span>
+<span id="cb2-133"><a href="#cb2-133" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:      09 54.728734</span></span>
+<span id="cb2-134"><a href="#cb2-134" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:      10 33.044458</span></span>
+<span id="cb2-135"><a href="#cb2-135" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:      11 05.742057</span></span>
+<span id="cb2-136"><a href="#cb2-136" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:      11  47.25653</span></span>
+<span id="cb2-137"><a href="#cb2-137" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:      12 26.354912</span></span>
+<span id="cb2-138"><a href="#cb2-138" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(data)[<span class="dv">18</span><span class="sc">:</span><span class="dv">20</span>]<span class="ot">&lt;-</span><span class="fu">c</span>(<span class="st">"Hour"</span>, <span class="st">"Minute"</span>, <span class="st">"Second"</span>)</span>
+<span id="cb2-139"><a href="#cb2-139" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span>
+<span id="cb2-140"><a href="#cb2-140" aria-hidden="true" tabindex="-1"></a><span class="do">##     ...1   tag                  ts        x       y      z   x_sd   y_sd   z_sd</span></span>
+<span id="cb2-141"><a href="#cb2-141" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;              &lt;POSc&gt;    &lt;num&gt;   &lt;num&gt; &lt;lgcl&gt;  &lt;num&gt;  &lt;num&gt; &lt;lgcl&gt;</span></span>
+<span id="cb2-142"><a href="#cb2-142" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     1 34518 2021-12-22 11:09:13 518708.7 2778823     NA 0.7236 1.5422     NA</span></span>
+<span id="cb2-143"><a href="#cb2-143" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     2 34518 2021-12-22 11:09:54 518709.7 2778823     NA 1.2561 1.6490     NA</span></span>
+<span id="cb2-144"><a href="#cb2-144" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     3 34518 2021-12-22 11:10:33 518710.7 2778822     NA 1.1799 1.5173     NA</span></span>
+<span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     4 34518 2021-12-22 11:11:05 518711.5 2778821     NA 0.5856 1.1773     NA</span></span>
+<span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     5 34518 2021-12-22 11:11:47 518710.9 2778819     NA 1.0556 1.0991     NA</span></span>
+<span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     6 34518 2021-12-22 11:12:26 518710.6 2778816     NA 0.5386 1.0217     NA</span></span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a><span class="do">##     nobs     k        E       Date            Time   Year  Month    Day   Hour</span></span>
+<span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;num&gt;    &lt;num&gt;     &lt;char&gt;          &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt; &lt;char&gt;</span></span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     3  6833 1.703519 2021-12-22 11:09:13.605054   2021     12     22     11</span></span>
+<span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     1  6833 2.072918 2021-12-22 11:09:54.728734   2021     12     22     11</span></span>
+<span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     1  6833 1.922073 2021-12-22 11:10:33.044458   2021     12     22     11</span></span>
+<span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     5  6833 1.314900 2021-12-22 11:11:05.742057   2021     12     22     11</span></span>
+<span id="cb2-154"><a href="#cb2-154" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     2  6833 1.523913 2021-12-22  11:11:47.25653   2021     12     22     11</span></span>
+<span id="cb2-155"><a href="#cb2-155" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     3  6833 1.154972 2021-12-22 11:12:26.354912   2021     12     22     11</span></span>
+<span id="cb2-156"><a href="#cb2-156" aria-hidden="true" tabindex="-1"></a><span class="do">##    Minute    Second</span></span>
+<span id="cb2-157"><a href="#cb2-157" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;char&gt;    &lt;char&gt;</span></span>
+<span id="cb2-158"><a href="#cb2-158" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     09 13.605054</span></span>
+<span id="cb2-159"><a href="#cb2-159" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     09 54.728734</span></span>
+<span id="cb2-160"><a href="#cb2-160" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     10 33.044458</span></span>
+<span id="cb2-161"><a href="#cb2-161" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     11 05.742057</span></span>
+<span id="cb2-162"><a href="#cb2-162" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     11  47.25653</span></span>
+<span id="cb2-163"><a href="#cb2-163" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     12 26.354912</span></span>
+<span id="cb2-164"><a href="#cb2-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-165"><a href="#cb2-165" aria-hidden="true" tabindex="-1"></a><span class="co"># Assign classes so data plays nice for plotting and summaries</span></span>
+<span id="cb2-166"><a href="#cb2-166" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Date <span class="ot">&lt;-</span> <span class="fu">as.Date</span>(data<span class="sc">$</span>Date)</span>
+<span id="cb2-167"><a href="#cb2-167" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Time <span class="ot">&lt;-</span> <span class="fu">as.times</span>(data<span class="sc">$</span>Time)</span>
+<span id="cb2-168"><a href="#cb2-168" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Year <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data<span class="sc">$</span>Year)</span>
+<span id="cb2-169"><a href="#cb2-169" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Month <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data<span class="sc">$</span>Month)</span>
+<span id="cb2-170"><a href="#cb2-170" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Day <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data<span class="sc">$</span>Day)</span>
+<span id="cb2-171"><a href="#cb2-171" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Hour <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data<span class="sc">$</span>Hour)</span>
+<span id="cb2-172"><a href="#cb2-172" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Minute <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data<span class="sc">$</span>Minute)</span>
+<span id="cb2-173"><a href="#cb2-173" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>Second <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(data<span class="sc">$</span>Second)</span>
+<span id="cb2-174"><a href="#cb2-174" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>tag <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(data<span class="sc">$</span>tag)</span>
+<span id="cb2-175"><a href="#cb2-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-176"><a href="#cb2-176" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-177"><a href="#cb2-177" aria-hidden="true" tabindex="-1"></a>data<span class="sc">$</span>ts <span class="ot">&lt;-</span> <span class="fu">as.POSIXct</span>(data<span class="sc">$</span>ts, <span class="at">format=</span><span class="st">'%Y-%m-%d %H:%M:%S'</span>, <span class="at">tz=</span><span class="st">'America/New_York'</span>)</span>
+<span id="cb2-178"><a href="#cb2-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-179"><a href="#cb2-179" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(data)</span>
+<span id="cb2-180"><a href="#cb2-180" aria-hidden="true" tabindex="-1"></a><span class="do">##     ...1    tag                  ts        x       y      z   x_sd   y_sd</span></span>
+<span id="cb2-181"><a href="#cb2-181" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;num&gt; &lt;fctr&gt;              &lt;POSc&gt;    &lt;num&gt;   &lt;num&gt; &lt;lgcl&gt;  &lt;num&gt;  &lt;num&gt;</span></span>
+<span id="cb2-182"><a href="#cb2-182" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     1  34518 2021-12-22 06:09:13 518708.7 2778823     NA 0.7236 1.5422</span></span>
+<span id="cb2-183"><a href="#cb2-183" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     2  34518 2021-12-22 06:09:54 518709.7 2778823     NA 1.2561 1.6490</span></span>
+<span id="cb2-184"><a href="#cb2-184" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     3  34518 2021-12-22 06:10:33 518710.7 2778822     NA 1.1799 1.5173</span></span>
+<span id="cb2-185"><a href="#cb2-185" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     4  34518 2021-12-22 06:11:05 518711.5 2778821     NA 0.5856 1.1773</span></span>
+<span id="cb2-186"><a href="#cb2-186" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     5  34518 2021-12-22 06:11:47 518710.9 2778819     NA 1.0556 1.0991</span></span>
+<span id="cb2-187"><a href="#cb2-187" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     6  34518 2021-12-22 06:12:26 518710.6 2778816     NA 0.5386 1.0217</span></span>
+<span id="cb2-188"><a href="#cb2-188" aria-hidden="true" tabindex="-1"></a><span class="do">##      z_sd  nobs     k        E       Date     Time  Year Month   Day  Hour</span></span>
+<span id="cb2-189"><a href="#cb2-189" aria-hidden="true" tabindex="-1"></a><span class="do">##    &lt;lgcl&gt; &lt;num&gt; &lt;num&gt;    &lt;num&gt;     &lt;Date&gt;  &lt;times&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt; &lt;num&gt;</span></span>
+<span id="cb2-190"><a href="#cb2-190" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:     NA     3  6833 1.703519 2021-12-22 11:09:14  2021    12    22    11</span></span>
+<span id="cb2-191"><a href="#cb2-191" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:     NA     1  6833 2.072918 2021-12-22 11:09:55  2021    12    22    11</span></span>
+<span id="cb2-192"><a href="#cb2-192" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     NA     1  6833 1.922073 2021-12-22 11:10:33  2021    12    22    11</span></span>
+<span id="cb2-193"><a href="#cb2-193" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     NA     5  6833 1.314900 2021-12-22 11:11:06  2021    12    22    11</span></span>
+<span id="cb2-194"><a href="#cb2-194" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     NA     2  6833 1.523913 2021-12-22 11:11:47  2021    12    22    11</span></span>
+<span id="cb2-195"><a href="#cb2-195" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     NA     3  6833 1.154972 2021-12-22 11:12:26  2021    12    22    11</span></span>
+<span id="cb2-196"><a href="#cb2-196" aria-hidden="true" tabindex="-1"></a><span class="do">##    Minute    Second</span></span>
+<span id="cb2-197"><a href="#cb2-197" aria-hidden="true" tabindex="-1"></a><span class="do">##     &lt;num&gt;     &lt;num&gt;</span></span>
+<span id="cb2-198"><a href="#cb2-198" aria-hidden="true" tabindex="-1"></a><span class="do">## 1:      9 13.605054</span></span>
+<span id="cb2-199"><a href="#cb2-199" aria-hidden="true" tabindex="-1"></a><span class="do">## 2:      9 54.728734</span></span>
+<span id="cb2-200"><a href="#cb2-200" aria-hidden="true" tabindex="-1"></a><span class="do">## 3:     10 33.044458</span></span>
+<span id="cb2-201"><a href="#cb2-201" aria-hidden="true" tabindex="-1"></a><span class="do">## 4:     11  5.742057</span></span>
+<span id="cb2-202"><a href="#cb2-202" aria-hidden="true" tabindex="-1"></a><span class="do">## 5:     11 47.256530</span></span>
+<span id="cb2-203"><a href="#cb2-203" aria-hidden="true" tabindex="-1"></a><span class="do">## 6:     12 26.354912</span></span>
+<span id="cb2-204"><a href="#cb2-204" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-205"><a href="#cb2-205" aria-hidden="true" tabindex="-1"></a>fish_det <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(data,<span class="fu">aes</span>(ts, tag)) <span class="sc">+</span> </span>
+<span id="cb2-206"><a href="#cb2-206" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb2-207"><a href="#cb2-207" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_datetime</span>(<span class="at">labels =</span> <span class="fu">date_format</span>(<span class="st">"%Y-%m-%d"</span>),</span>
+<span id="cb2-208"><a href="#cb2-208" aria-hidden="true" tabindex="-1"></a>                   <span class="at">date_breaks =</span> <span class="st">"2 weeks"</span>, <span class="at">limits =</span> <span class="fu">as.POSIXct</span>(<span class="fu">c</span>(<span class="st">'2021-12-15 00:00:00'</span>, <span class="st">'2022-05-10 00:00:00'</span>)))<span class="sc">+</span></span>
+<span id="cb2-209"><a href="#cb2-209" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Date"</span>,  <span class="at">y =</span> <span class="st">"Transmitter"</span>) <span class="sc">+</span></span>
+<span id="cb2-210"><a href="#cb2-210" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()<span class="sc">+</span></span>
+<span id="cb2-211"><a href="#cb2-211" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle=</span> <span class="dv">50</span>, <span class="at">size=</span><span class="dv">10</span>, <span class="at">vjust =</span> <span class="dv">1</span>, <span class="at">hjust=</span><span class="dv">1</span>),<span class="at">panel.grid.major =</span> <span class="fu">element_blank</span>(), <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb2-212"><a href="#cb2-212" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">8</span>))<span class="sc">+</span></span>
+<span id="cb2-213"><a href="#cb2-213" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Trout Detections YAPS"</span>)</span>
+<span id="cb2-214"><a href="#cb2-214" aria-hidden="true" tabindex="-1"></a>fish_det</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="YAPS_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="mapping" class="level2">
+<h2 class="anchored" data-anchor-id="mapping">Mapping!</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#We need to make the data into a spatial dataframe to graph onto a map</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>sfdat <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(<span class="st">'x'</span>, <span class="st">'y'</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_set_crs</span>(<span class="dv">2958</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="dv">4326</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">long =</span> <span class="fu">st_coordinates</span>(.)[, <span class="dv">1</span>],</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">lat  =</span> <span class="fu">st_coordinates</span>(.)[, <span class="dv">2</span>])</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#Fok, let's plot this in ggmap to get our bearings</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Note,a API key from Google Maps is required to load the map and run the below code. Visit https://rpubs.com/ktcross/1154003 for instructions on  how to install and run ggamps in R</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># For now, we will use the already saved maps but the code to generate the maps if you have an existing API code is below as well.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co"># FLmap_zoom_out &lt;- get_googlemap(center = c(lon=mean(sfdat$long), lat=mean(sfdat$lat)),</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#                         zoom = 6,</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#                         maptype = c("satellite"))</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/FLmap_zoom_out.RData"</span>)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="fu">ggmap</span>(FLmap_zoom_out, <span class="at">extent=</span><span class="st">'normal'</span>) <span class="sc">+</span> </span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> sfdat,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat), <span class="at">col =</span><span class="st">"yellow"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="YAPS_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># FLmap_zoom_in &lt;- get_googlemap(center = c(lon=mean(sfdat$long), lat=mean(sfdat$lat)),</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co">#                                zoom = 16,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co">#                                maptype = c("satellite"))</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"data/FLmap_zoom_in.RData"</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggmap</span>(FLmap_zoom_in, <span class="at">extent=</span><span class="st">'normal'</span>) <span class="sc">+</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> sfdat,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>             <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat,), <span class="at">col =</span><span class="st">"yellow"</span>) <span class="sc">+</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>tag)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="YAPS_files/figure-html/unnamed-chunk-3-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="calculating-tracks" class="level2">
+<h2 class="anchored" data-anchor-id="calculating-tracks">Calculating tracks</h2>
+<p>The most important part to set up for the HMMs is differentiating the tracks. This is where the second big decision comes in. How long do you wait between position before it is a new track? Depends on your array design, tag specifications, and the biology of your organism. We are using a cut-off of 5 minutes because our tags have an average burst interval of 20-40 seconds, meaning the fish would have to miss 10 detections (and therefore left the array).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#So now we know where we are in space. Let's now set up the tracks for the HMM analysis</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">#We are going to filter it even more so that each position we keep is calculated by detections heard by 2 or more receivers</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>dat20 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(nobs <span class="sc">&gt;=</span> <span class="dv">2</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">#Now we are going to create a column that allows us to identify the start of a new track</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">#for this exercise, we decided that if the fish was not detected for 5 minutes, a new track would be created</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>dat20t <span class="ot">&lt;-</span> dat20 <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(tag) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">trackstart =</span> <span class="fu">ifelse</span>(<span class="fu">as.numeric</span>(<span class="fu">unclass</span>(ts)<span class="sc">-</span><span class="fu">unclass</span>(<span class="fu">lag</span>(ts))) <span class="sc">&gt;</span> <span class="dv">300</span>, <span class="st">'Y'</span>, <span class="st">'N'</span>)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>dat20t[<span class="fu">is.na</span>(dat20t)] <span class="ot">&lt;-</span> <span class="st">'Y'</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(dat20t)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="do">## tibble [8,436 × 21] (S3: tbl_df/tbl/data.frame)</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ ...1      : num [1:8436] 1 4 5 6 7 8 9 10 12 13 ...</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ tag       : Factor w/ 3 levels "34501","34507",..: 3 3 3 3 3 3 3 3 3 3 ...</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ ts        : POSIXct[1:8436], format: "2021-12-22 06:09:13" "2021-12-22 06:11:05" ...</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ x         : num [1:8436] 518709 518712 518711 518711 518711 ...</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ y         : num [1:8436] 2778823 2778821 2778819 2778816 2778814 ...</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ z         : chr [1:8436] "Y" "Y" "Y" "Y" ...</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ x_sd      : num [1:8436] 0.724 0.586 1.056 0.539 0.534 ...</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ y_sd      : num [1:8436] 1.54 1.18 1.1 1.02 1.01 ...</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ z_sd      : chr [1:8436] "Y" "Y" "Y" "Y" ...</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ nobs      : num [1:8436] 3 5 2 3 3 3 3 2 2 5 ...</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ k         : num [1:8436] 6833 6833 6833 6833 6833 ...</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ E         : num [1:8436] 1.7 1.31 1.52 1.15 1.14 ...</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Date      : Date[1:8436], format: "2021-12-22" "2021-12-22" ...</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Time      : 'times' num [1:8436] 11:09:14 11:11:06 11:11:47 11:12:26 11:13:01 ...</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a><span class="do">##   ..- attr(*, "format")= chr "h:m:s"</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Year      : num [1:8436] 2021 2021 2021 2021 2021 ...</span></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Month     : num [1:8436] 12 12 12 12 12 12 12 12 12 12 ...</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Day       : num [1:8436] 22 22 22 22 22 22 22 22 22 22 ...</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Hour      : num [1:8436] 11 11 11 11 11 11 11 11 11 11 ...</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Minute    : num [1:8436] 9 11 11 12 13 13 14 14 15 16 ...</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ Second    : num [1:8436] 13.61 5.74 47.26 26.35 0.61 ...</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a><span class="do">##  $ trackstart: chr [1:8436] "Y" "N" "N" "N" ...</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="co">#create a column that we can put track numbers in</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>dat20tt <span class="ot">&lt;-</span> dat20t <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(tag) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">track =</span> <span class="fu">ifelse</span>(<span class="fu">row_number</span>() <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">1</span>, <span class="cn">NA</span>)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a><span class="co">#create a function that numbers the tracks and inputs what track each row is in</span></span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>tracknum1 <span class="ot">&lt;-</span> <span class="cf">function</span>(x){</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">2</span><span class="sc">:</span><span class="fu">nrow</span>(x)){</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (x<span class="sc">$</span>trackstart[i] <span class="sc">==</span> <span class="st">'Y'</span>){</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>      x<span class="sc">$</span>track[i] <span class="ot">&lt;-</span> x<span class="sc">$</span>track[i<span class="dv">-1</span>]<span class="sc">+</span><span class="dv">1</span></span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>      x<span class="sc">$</span>track[i] <span class="ot">&lt;-</span> x<span class="sc">$</span>track[i<span class="dv">-1</span>]</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>  x</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a><span class="co">#apply across the data</span></span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a>dat_HMM <span class="ot">&lt;-</span> dat20tt <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(tag) <span class="sc">%&gt;%</span> <span class="fu">group_modify</span>(<span class="sc">~</span><span class="fu">tracknum1</span>(.x)) <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>()</span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a><span class="do">## New names:</span></span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a><span class="do">## New names:</span></span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a><span class="do">## New names:</span></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="do">## • `...1` -&gt; `...2`</span></span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dat_HMM)</span>
+<span id="cb5-57"><a href="#cb5-57" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 6 × 22</span></span>
+<span id="cb5-58"><a href="#cb5-58" aria-hidden="true" tabindex="-1"></a><span class="do">##   tag    ...2 ts                        x        y z      x_sd  y_sd z_sd   nobs</span></span>
+<span id="cb5-59"><a href="#cb5-59" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;fct&gt; &lt;dbl&gt; &lt;dttm&gt;                &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;dbl&gt;</span></span>
+<span id="cb5-60"><a href="#cb5-60" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 34501  1192 2022-02-04 06:32:09 518866. 2778477. Y     0.524  1.45 Y         8</span></span>
+<span id="cb5-61"><a href="#cb5-61" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 34501  1194 2022-02-04 06:33:11 518861. 2778481. Y     2.69   3.05 Y         2</span></span>
+<span id="cb5-62"><a href="#cb5-62" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 34501  1195 2022-02-04 06:33:40 518861. 2778481. Y     3.02   3.36 Y         2</span></span>
+<span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 34501  1197 2022-02-04 06:35:06 518860. 2778480. Y     3.17   3.59 Y         2</span></span>
+<span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 34501  1200 2022-02-04 06:36:44 518858. 2778481. Y     1.32   3.86 Y         2</span></span>
+<span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 34501  1202 2022-02-04 06:37:58 518859. 2778481. Y     0.705  2.41 Y         3</span></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="do">## # ℹ 12 more variables: k &lt;dbl&gt;, E &lt;dbl&gt;, Date &lt;date&gt;, Time &lt;times&gt;, Year &lt;dbl&gt;,</span></span>
+<span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a><span class="do">## #   Month &lt;dbl&gt;, Day &lt;dbl&gt;, Hour &lt;dbl&gt;, Minute &lt;dbl&gt;, Second &lt;dbl&gt;,</span></span>
+<span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a><span class="do">## #   trackstart &lt;chr&gt;, track &lt;dbl&gt;</span></span>
+<span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a><span class="do">##Now we have the data we need for the HMMs!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now move to running the HMMs! See you in that module!</p>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

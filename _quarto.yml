@@ -11,10 +11,10 @@ website:
       href: Rinst.html
     - text: "YAPS and filtering"
       href: YAPS.html
-    - text: "Environmental Variables"
-      href: Enviro.html
     - text: "Hidden Markov Models"
       href: HMM.html
+    - text: "Environmental Variables"
+      href: Enviro.html
     - text: 'Integrated Step Selection Functions'
       href: GAM.html
 

@@ -1,10 +1,15 @@
 ##Code for Workshop##
-##Author: Jon Rodemann
-##Date started: 10/12/2026
+##Authors: Jon Rodemann, Sophia Costa, Jennifer Rehage
+##Source Data - Rodemann et al., 2025 Sci. Rep., Costa et al., 2026 (In Prep)
 
 ####YAPS####
 
-#packages
+##This is the general workflow for syncing receivers and running tracks in YAPS. We won't be running this code in this workshop
+##and in fact, this code does not work because the syncing fails. In reality, you need to play around with your sync data 
+##(including splitting up the time periods if there are "blackouts", possibly removing receivers, and other adjustments) for the sync model
+##to be successful. We will pick up the workshop with the positions that were calculated by the developer of YAPS (WOW!), Henrik Baktoft.
+
+#Install and load required libraries
 install.packages(c('tidyverse', 'devtools', 'TMB'))
 library(devtools)
 library(tidyverse)
@@ -104,4 +109,160 @@ yaps_out_34507 <- runYaps(inp_SHYAPS, silent=F)
 
 plotYaps(yaps_out_34507)
 
-###So now we have our positions. Time to filter and set them up for the HMMs
+##This is where we will leave it for the YAPS run. We encourage all of you if you are interested to explore the package, as 
+##it can even run simulations! Now onto the data exploration and filtering
+
+####Data filtering, exploration and graphing####
+##In this section, we will look at the data, filter it based on the positional error from the YAPS algorithm, explore the data, and then
+##graph it as an abacus plot (yay!) as well as on a map. Then we will prep it for the HMM analysis.
+
+#Load in libraries
+library(splitstackshape)
+library(chron)
+library(scales)
+library(ggmap)
+library(sf)
+
+data <- sfheadersdata <- read_csv('data/fish_positions.csv')
+head(data)
+
+#The columns of this data include tag (last digits of tag number), x (longitude in UTM), y (latitude in UTM), 
+#x_sd (standard deviation (error) of longitude in meters), y_sd (standard deviation (error) of latitude in meters),
+#z_sd (standard deviation (error) of depth in meters - not applicable), nobs (number of receivers detected on), and k (positions that represent a track)
+
+#make a column with total error
+data <- data %>%
+  mutate(E = sqrt(x_sd^2 + y_sd^2))
+
+#filter by error. We are going to filter out anything with an error greater than 10 m. This will have to match your environmental variables later
+dat_10 <- data %>% filter(E < 10)
+
+#summary stats
+#number of positions per fish
+dat_10 %>% group_by(tag) %>% summarize(n = n())
+
+#abacus plot for positions
+dat_10$ts <- as.POSIXct(dat_10$ts, format = '%Y-%m-%dT%H:%M:%OS')
+
+# Break up the new datetime column into  a date, and a time
+data <- dat_10
+
+data$Date_Time2 <- data$ts
+
+data <- cSplit(data, "Date_Time2", sep = " ", type.convert = F)
+
+head(data)
+
+
+# Rename columns so they make sense, it'll just be your last 2 column numbers, in this case the 15th and 16th column s
+colnames(data)[12:14]<-c('E', "Date", "Time")
+head(data)
+
+
+# Then I repeat this and parse the date into year, month, and day (then hour, minute, second), so I can easily subset by year
+# Copy date to parse out, maintain original date
+data$Date2 <- data$Date
+
+
+data<-cSplit(data, "Date2", sep = "-", type.convert = FALSE)
+head(data)
+colnames(data)[15:17]<-c("Year", "Month", "Day")
+head(data)
+
+data$Time2 <- data$Time
+
+data <-cSplit(data, "Time2", sep = ":", type.convert = FALSE)
+head(data)
+colnames(data)[18:20]<-c("Hour", "Minute", "Second")
+head(data)
+
+# Assign classes so data plays nice for plotting and summaries
+data$Date <- as.Date(data$Date)
+data$Time <- as.times(data$Time)
+data$Year <- as.numeric(data$Year)
+data$Month <- as.numeric(data$Month)
+data$Day <- as.numeric(data$Day)
+data$Hour <- as.numeric(data$Hour)
+data$Minute <- as.numeric(data$Minute)
+data$Second <- as.numeric(data$Second)
+data$tag <- as.factor(data$tag)
+
+
+data$ts <- as.POSIXct(data$ts, format='%Y-%m-%d %H:%M:%S', tz='America/New_York')
+
+head(data)
+
+fish_det <- ggplot(data,aes(ts, tag)) + 
+  geom_point() +
+  scale_x_datetime(labels = date_format("%Y-%m-%d"),
+                   date_breaks = "2 weeks", limits = as.POSIXct(c('2021-12-15 00:00:00', '2022-05-10 00:00:00')))+
+  labs(x = "Date",  y = "Transmitter") +
+  theme_bw()+
+  theme(axis.text.x=element_text(angle= 50, size=10, vjust = 1, hjust=1),panel.grid.major = element_blank(), panel.grid.minor = element_blank()) +
+  theme(axis.text.y=element_text(size=8))+
+  labs(title = "Trout Detections YAPS")
+fish_det
+
+#We need to make the data into a spatial dataframe to graph onto a map
+sfdat <- data %>% 
+  st_as_sf(coords = c('x', 'y')) %>% 
+  st_set_crs(2958) %>% 
+  st_transform(4326) %>% 
+  mutate(
+    long = st_coordinates(.)[, 1],
+    lat  = st_coordinates(.)[, 2])
+
+#Fok, let's plot this in ggmap to get our bearings
+# Note,a API key from Google Maps is required to load the map and run the below code. Visit https://rpubs.com/ktcross/1154003 for instructions on  how to install and run ggamps in R
+# For now, we will use the already saved maps but the code to generate the maps if you have an existing API code is below as well.
+
+# FLmap_zoom_out <- get_googlemap(center = c(lon=mean(sfdat$long), lat=mean(sfdat$lat)),
+#                         zoom = 6,
+#                         maptype = c("satellite"))
+
+load("data/FLmap_zoom_out.RData")
+
+ggmap(FLmap_zoom_out, extent='normal') + 
+  geom_point(data = sfdat,
+             aes(x = long, y = lat), col ="yellow") 
+
+# FLmap_zoom_in <- get_googlemap(center = c(lon=mean(sfdat$long), lat=mean(sfdat$lat)),
+#                                zoom = 16,
+#                                maptype = c("satellite"))
+load("data/FLmap_zoom_in.RData")
+
+ggmap(FLmap_zoom_in, extent='normal') + 
+  geom_point(data = sfdat,
+             aes(x = long, y = lat,), col ="yellow") +
+  facet_wrap(~tag)
+
+#So now we know where we are in space. Let's now set up the tracks for the HMM analysis
+#We are going to filter it even more so that each position we keep is calculated by detections heard by 2 or more receivers
+dat20 <- data %>% dplyr::filter(nobs >= 2)
+
+#Now we are going to create a column that allows us to identify the start of a new track
+#for this exercise, we decided that if the fish was not detected for 5 minutes, a new track would be created
+dat20t <- dat20 %>% group_by(tag) %>% mutate(trackstart = ifelse(as.numeric(unclass(ts)-unclass(lag(ts))) > 300, 'Y', 'N')) %>% ungroup()
+dat20t[is.na(dat20t)] <- 'Y'
+
+str(dat20t)
+
+#create a column that we can put track numbers in
+dat20tt <- dat20t %>% group_by(tag) %>% mutate(track = ifelse(row_number() == 1, 1, NA)) %>% ungroup()
+
+#create a function that numbers the tracks and inputs what track each row is in
+tracknum1 <- function(x){
+  for (i in 2:nrow(x)){
+    if (x$trackstart[i] == 'Y'){
+      x$track[i] <- x$track[i-1]+1
+    } else {
+      x$track[i] <- x$track[i-1]
+    }
+  }
+  x
+}
+
+#apply across the data
+dat_HMM <- dat20tt %>% group_by(tag) %>% group_modify(~tracknum1(.x)) %>% ungroup()
+
+##Now we have the data we need for the HMMs!
