@@ -219,7 +219,6 @@ Looking at the step length and angle distributions, you can see a few things. St
 
 states <- viterbi(mod)
 
-mod$data
 state_30 <- mod$data %>%
   mutate(state = states)
 
