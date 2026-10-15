@@ -406,29 +406,21 @@ hmm_data_30 <- prepData(interp_df_30, type = "UTM", coordNames = c("x", "y"))
 # Remove rows with zero or NA step (stay/missing movement) because gamma requires positive steps
 hmm_data_30 <- hmm_data_30 %>% filter(!is.na(step) & step > 0) %>% filter(!is.na(angle))
 
-hmm_data_30 <- hmm_data_30 %>%
-  filter(is.finite(step), is.finite(angle), step > 0) %>%
-  mutate(
-    step = pmax(step, quantile(step, 0.01, na.rm = TRUE)),
-    step = pmin(step, quantile(step, 0.99, na.rm = TRUE))
-  )
-
 ##We have prepped our data. However, it is still not just plug and play. We need to investigate our data to fit 
 ##general curves to our data to inform the model. We don't need to do this, but it creates a more informed model based
 ##on the original data. We are trying to fit these data into two behavioral states, so we will want to inform the model with 2 curves
 
 hist(hmm_data_30$step, breaks = 20, freq = F, main = "Step lengths")
 curve(dgamma(x, shape = 1.5, rate=0.9), n=200, add=TRUE, col="royalblue", lwd=4) #shape is how right-skewed the gamma curve is
-curve(dgamma(x, shape = 1.9, rate=0.7), n=200, add=TRUE, col="cadetblue", lwd=4) #rate is how tall the curve apex is
+curve(dgamma(x, shape = 1.9, rate=0.6), n=200, add=TRUE, col="cadetblue", lwd=4) #rate is how tall the curve apex is
 curve(dgamma(x, shape = 2.2, rate=0.4), n=200, add=TRUE, col="navyblue", lwd=4)
 
 ##this is a little subjective, but there is a good starting out point. The first curve encompasses the lower step lengths well.
-##The second curve does not really add any more information either than including the step lengths that are longer. However,
-##the third curve does this but also includes the higher amount of longer steps. So let's go with the first and third curves
+##The third curve does not really do a good job because it is spread out too far. So let's go with the first and second curves
 
 #assign initial step length distributions
-sl_init_mean <- c(2.2/0.4, 1.5/0.9) #initial means should be the shape/rate for both
-sl_init_sd <- c(sqrt(2.2)/0.7, sqrt(1.5)/0.9) #initial standard deviations should be square root of shape/rate
+sl_init_mean <- c(1.9/0.6, 1.5/0.9) #initial means should be the shape/rate for both
+sl_init_sd <- c(sqrt(1.9)/0.6, sqrt(1.5)/0.9) #initial standard deviations should be square root of shape/rate
 
 ##Now we do the same thing for the turn angles. However, we want the model to try to find states with opposite turn angles (turn 180 degrees vs straight)
 ##Therefore, we will play with the numbers a little.
@@ -456,20 +448,19 @@ mod
 mod %>% plotPR() #gives the goodness of fit. Looks pretty good!
 
 ##Looking at the step length and angle distributions, you can see a few things. State 1 is categorized by longer step lengths
-##(average of 4 meters) and straight turn angles (0.007 radians, basically zero). State 2, on the other hand, has a much shorter
+##(average of 4.13 meters) and straight turn angles (0.007 radians, basically zero). State 2, on the other hand, has a much shorter
 ##step length (average of 0.9 meters) but a similar turn angle (-0.02 radians). However, the concentration is a lot lower, so state 2
 ##encompasses the larger turn angles. These results also give you a transistion probability to transition between states. Pretty low for both,
 ##but it does happen. If you run the following code, you can visualize the distributions for each state as well as which state each step on all the
 ##tracks is! Since that is 59 tracks, we won't run it online but we will go through it in the workshop
 
-# statecol <- c('lightblue', 'purple1')
-# plot(mod, col = statecol)
+statecol <- c('lightblue', 'purple1')
+plot(mod, col = statecol)
 
 ##Now we can assign states directly to the dataframe
 
 states <- viterbi(mod)
 
-mod$data
 state_30 <- mod$data %>%
   mutate(state = states)
 
@@ -492,7 +483,7 @@ output_HMM_df <- state_30 %>%
 #Included in this section will also be the setup of the data for iSSFs, including calculating the "false" steps that the iSSFs use to determine habitat selection.
 
 # We will end up with 6 environmental variables: class of SAV, PLAND (Percentage of Landscape; the percentage that the dense SAV class makes up), ED (Edge Density; the density of edges of the dense SAV class), 
-#PD (Patch Density; the density of patches of the dense SAV class), Division (a measure of likelihood that an adjacent cell is the same class as the cell you are calculating this metric on), and Shape_mn (Mean Shape; a measure of how complex the patches of dense SAV are). 
+#PD (Patch Density; the density of patches of the dense SAV class), Division (a measure of likelihood that two randomly selected cells are not the same patch), and Shape_mn (Mean Shape; a measure of how complex the patches of dense SAV are). 
 #This is where you can substitute any environmental data you may have based on your questions.
 
 #Load in libraries
@@ -515,19 +506,28 @@ plot(rmap)
 fish_trackr <- rdat %>%
   mutate(ID = as.factor(ID),
          ts = as.POSIXct(ts, format = "%Y-%m-%d %H:%M:%OS", tz = "UTC")) %>% 
+  #group_by(ID) %>% 
   make_track(
     .x = x, # X coordinate column
     .y = y, # Y coordinate column
     .t = ts, # Timestamp column
     id = ID, # Individual ID column
     crs = st_crs(rmap),
-    state = state)
+    state = state) 
 
 # Convert the track to observed steps, grouped by track
-# This calculates step length (sl_) and turn angle (ta_) for the observed steps.
+# This calculates step length (sl_) and turn angle (ta_) for the observed steps. You have to nest by ID or else 
+#it thinks it is one long track
 steps_obsr <- fish_trackr %>%
-  steps(keep_cols = 'end') %>% 
-  dplyr::filter(!is.na(ta_))
+  # Isolate each track into a list-column called 'data'
+  nest(data = -id) %>%
+  # Apply steps() to each nested track independently
+  mutate(
+    step_data = map(data, ~ steps(.x, keep_cols = "end"))
+  ) %>%
+  # Keep only the ID and the new step data, then expand back to a normal dataframe
+  select(id, step_data) %>%
+  unnest(cols = step_data)
 
 ##Now that we have our observed data set up for environmental extraction and iSSF calculation, we need to calculate the random steps
 ##that the iSSFs need to compare against our observed step. In this workshop, we are just going to do a 10 - 1 ratio, but
@@ -580,7 +580,7 @@ result_metr <- 1:nrow(rcoord_sf) %>% future_map(
     sample_lsm(
       rmap_r,
       y = st_geometry(rcoord_sf[i, ]),  # Ensure geometry is passed
-      size = 15,
+      size = 15, #15 is for a 5m perception radius and a 10m positional error
       what = c(
         "lsm_c_pd", "lsm_c_ed",
         "lsm_c_division",
@@ -620,7 +620,7 @@ mettry <- full_combinations %>%
 metr1 <- mettry %>% pivot_wider(names_from = metric, values_from = value) %>% dplyr::filter(class == 1)
 names(metr1)
 
-strue <- metr1 %>% dplyr::select(c(division, ed, pd, pland, shape_mn)) %>% bind_cols(sr2) %>% dplyr::select(-c(ID))
+strue <- metr1 %>% dplyr::select(c(division, ed, pd, pland, shape_mn)) %>% bind_cols(sr2) %>% dplyr::select(-c(ID)) %>% drop_na()
 
 ##Now we are ready to run some iSSFs!
 
@@ -636,7 +636,290 @@ library(ggeffects)
 
 strue <- read_csv('data/data_environmental.csv')
 
+# Standardize continuous habitat variables (z-score transformation)
+# This helps with model convergence and interpretation of interaction terms.
+steps_finalr <- strue %>%
+  mutate(
+    # Standardize continuous habitat covariates
+    pland_z = scale(pland)[, 1],
+    ed_z = scale(ed)[, 1],
+    pd_z = scale(pd)[, 1],
+    shape_mn_z = scale(shape_mn)[, 1],
+    division_z = scale(division)[,1],
+    
+    # Convert state to a factor for proper modeling interaction
+    state_f = factor(state)
+  ) %>% drop_na()
+
+# Fit the iSSF using conditional logistic regression (clogit).
+issf_modelr <- steps_finalr %>%
+  drop_na() %>% 
+  fit_clogit(case_ ~
+               # Movement terms 
+               sl_ + I(sl_^2) +
+               cos(ta_) +
+               # Habitat selection with interaction with HMM state
+               pland_z * state_f + 
+               ed_z * state_f +
+               pd_z * state_f +
+               shape_mn_z * state_f +
+               class * state_f +
+               division_z * state_f +
+               # The required stratification term for iSSF
+               strata(step_id_), model = T
+  )
+
+summary(issf_modelr)
+
+##There are no significant effects except for step length and turn angle. But because this is a workshop, we are going to
+##graph things anyway! The most single significant effect is the percentage of landscape that is dense SAV. There are no significant interaction effects, but pd and division are close 
+##So we will go over how to graph these interactions and then we can answer any questions! 
+
+mean(steps_finalr$sl_)
+max(steps_finalr$sl_)
+min(steps_finalr$sl_)
+mean(steps_finalr$ta_)
+sl_mean <- 2.207 #mean step length (meters)
+ang_mean <- 0.01 #mean turn angle (radians)
+z_mean <- 0 #mean environmental variable (z-score)
+sl_range <- seq(0.1, 27.054, length.out = 100) #range of step lengths (meters)
+ang_range <- seq(-3.14, 3.14, length.out = 100) #range of turn angles (radians)
+z_range <- seq(-2.1, 2.1, length.out = 100) #range of environmental variables (z-score)
+n_points <- length(sl_range) # 100
+hab_vars <- c("pland_z", "ed_z", "pd_z", "shape_mn_z", "division_z")
+
+
+#create the dataset to test across for step length, keeping everything else constant
+tsl <- data.frame(
+  sl_ = sl_range, 
+  ta_ = rep(ang_mean, n_points),             
+  pland_z = rep(0, n_points), ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), division_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
+  state_f = factor(rep("1", n_points), levels = c("1", "2")), 
+  class = factor(rep("1", n_points), levels = c("1", "2"))  
+)
+
+#Then we need a 1-row dataset representing a single location. This will be the same as the previous one with the sl set to the mean
+
+msl <- data.frame(
+  sl_ = sl_mean, 
+  ta_ = ang_mean, 
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  state_f = factor("1", levels = c("1", "2")),
+  class = factor("1", levels = c("1", "2"))
+)
+
+#Calculate the log relative selection strength (log-RSS) for step length
+rss_sl <- log_rss(issf_modelr, x1 = tsl, x2 = msl, ci = 'se')
+
+#We can plot the step length log-RSS curve
+plot_sl <- ggplot(rss_sl$df, aes(x = sl_x1, y = log_rss)) + 
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") + 
+  geom_line(linewidth = 1.2, color = "darkblue") +
+  geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.2, fill = "darkblue") +
+  theme_bw() +
+  labs(
+    title = "Log-RSS for Step Length (zero turn angle)",
+    x = "Step Length (meters)",
+    y = "Log Relative Selection Strength"
+  )
+plot_sl
+
+
+##Looks like our fish prefer really short steps or really long ones compared to the random steps created. The random steps were
+##created using distributions from the actual data. 
+
+#Now we can plot turn angle! 
+
+#create the dataset to test across for turn angle, keeping everything else constant
+tang <- data.frame(
+  sl_ = rep(sl_mean, n_points), 
+  ta_ = ang_range,             
+  pland_z = rep(0, n_points), ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), division_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
+  state_f = factor(rep("1", n_points), levels = c("1", "2")), 
+  class = factor(rep("1", n_points), levels = c("1", "2"))  
+)
+
+#1-row at mean turn angle
+mang <- data.frame(
+  sl_ = sl_mean, 
+  ta_ = ang_mean, 
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  state_f = factor("1", levels = c("1", "2")),
+  class = factor("1", levels = c("1", "2"))
+)
+
+#Calculate the log relative selection strength (log-RSS) for turn angle
+rss_ang <- log_rss(issf_modelr, x1 = tang, x2 = mang, ci = 'se')
 
 
 
+plot_ang <- ggplot(rss_ang$df, aes(x = ta_x1, y = log_rss)) + 
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") + 
+  geom_line(linewidth = 1.2, color = "darkblue") +
+  geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.2, fill = "darkblue") +
+  theme_bw() +
+  labs(
+    title = "Log-RSS for Turn Angle (mean step length)",
+    x = "Turn angle (radians)",
+    y = "Log Relative Selection Strength"
+  )
+plot_ang
+
+##Looks like our fish liked to go less straight than the random steps. We can also do the same thing
+##for the environmental variables. Since PLAND is the most significant one, we will only show that one.
+
+#create the dataset to test across for PLAND, keeping everything else constant
+tpland <- data.frame(
+  sl_ = rep(sl_mean, n_points), 
+  ta_ = rep(ang_mean, n_points),             
+  pland_z = z_range, ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), division_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
+  state_f = factor(rep("1", n_points), levels = c("1", "2")), 
+  class = factor(rep("1", n_points), levels = c("1", "2"))  
+)
+
+#1-row
+mpland <- data.frame(
+  sl_ = sl_mean, 
+  ta_ = ang_mean, 
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  state_f = factor("1", levels = c("1", "2")),
+  class = factor("1", levels = c("1", "2"))
+)
+
+#Calculate the log relative selection strength (log-RSS) for PLAND
+rss_pland <- log_rss(issf_modelr, x1 = tpland, x2 = mpland, ci = 'se')
+
+
+plot_pland <- ggplot(rss_pland$df, aes(x = pland_z_x1, y = log_rss)) + 
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") + 
+  geom_line(linewidth = 1.2, color = "darkblue") +
+  geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.2, fill = "darkblue") +
+  theme_bw() +
+  labs(
+    title = "Log-RSS for PLAND",
+    x = "PLAND (z-score)",
+    y = "Log Relative Selection Strength"
+  )
+plot_pland
+
+##Looks like our fish prefer seascapes with more dense SAV in them! Now we can look at the interactions between state and environmental variables.
+##If there was a significant result, that would mean that the fish preferred certain environmental variables when in a certain state.
+##The most significant interaction was state and division, but pd was also close. We will graph both.
+
+#Division first
+
+#create the dataset to test across for both state and division, keeping everything else constant
+tdivstate <- data.frame(
+  sl_ = rep(sl_mean, n_points*2), 
+  ta_ = rep(ang_mean, n_points*2),             
+  pland_z = rep(0, n_points*2), ed_z = rep(0, n_points*2), pd_z = rep(0, n_points*2), shape_mn_z = rep(0, n_points*2), division_z = rep(z_range, 2), #all of the environmental variables are centered around 0 because they are z-scored
+  state_f = factor(rep(c("1", "2"), each = n_points)), 
+  class = factor(rep("1", n_points), levels = c("1", "2"))  
+)
+
+#1-row
+mdivstate <- data.frame(
+  sl_ = sl_mean, 
+  ta_ = ang_mean, 
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  state_f = factor("1", levels = c("1", "2")),
+  class = factor("1", levels = c("1", "2"))
+)
+
+#Calculate the log relative selection strength (log-RSS) for both states relative to baseline
+rss_divstate <- log_rss(issf_modelr, x1 = tdivstate, x2 = mdivstate, ci = 'se')
+
+#separate out based on state
+df_state1 <- rss_divstate$df %>% filter(state_f_x1 == "1") %>% arrange(get("division_z_x1"))
+df_state2 <- rss_divstate$df %>% filter(state_f_x1 == "2") %>% arrange(get("division_z_x1"))
+
+#calculate SE of the difference (using a conservative approximation, ignoring covariance)
+#SE_diff = sqrt(SE_1^2 + SE_2^2)
+se_diff <- sqrt(((df_state1$upr-df_state1$lwr)/3.92)^2 + ((df_state2$upr-df_state2$lwr)/3.92)^2)
+
+#create a new data frame for the difference plot
+df_diff <- data.frame(
+  z_score = df_state1[["division_z_x1"]],
+  log_rss_diff = df_state2$log_rss - df_state1$log_rss,
+  # Calculate 95% CI bounds (Z-score 1.96 for 95%)
+  lwr_diff = (df_state2$log_rss - df_state1$log_rss) - 1.96 * se_diff,
+  upr_diff = (df_state2$log_rss - df_state1$log_rss) + 1.96 * se_diff
+)
+
+#plot the difference with confidence interval
+plot_divstate <- ggplot(df_diff, aes(x = z_score, y = log_rss_diff)) + 
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  geom_line(linewidth = 1.2, color = "darkblue") +
+  # Add the confidence interval ribbon
+  geom_ribbon(aes(ymin = lwr_diff, ymax = upr_diff), alpha = 0.2, fill = "darkblue") +
+  theme_bw() +
+  labs(
+    title = "State-Dependent Effect: Difference in Division Selection",
+    x = "Division (z-score)",
+    y = "log-RSS Difference (State 2 - State 1)"
+  )
+
+plot_divstate
+
+##Not significant, but shows that fish are more likely to be in state 2 ("foraging state") over areas with either larger dense SAV patches or little dense SAV
+##So how about PD?
+
+#create the dataset to test across for both state and pd, keeping everything else constant
+tpdstate <- data.frame(
+  sl_ = rep(sl_mean, n_points*2), 
+  ta_ = rep(ang_mean, n_points*2),             
+  pland_z = rep(0, n_points*2), ed_z = rep(0, n_points*2), pd_z = rep(z_range, 2), shape_mn_z = rep(0, n_points*2), division_z = rep(0, n_points*2), #all of the environmental variables are centered around 0 because they are z-scored
+  state_f = factor(rep(c("1", "2"), each = n_points)), 
+  class = factor(rep("1", n_points), levels = c("1", "2"))  
+)
+
+#1-row
+mpdstate <- data.frame(
+  sl_ = sl_mean, 
+  ta_ = ang_mean, 
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  state_f = factor("1", levels = c("1", "2")),
+  class = factor("1", levels = c("1", "2"))
+)
+
+#Calculate the log relative selection strength (log-RSS) for both states relative to baseline
+rss_pdstate <- log_rss(issf_modelr, x1 = tpdstate, x2 = mpdstate, ci = 'se')
+
+#separate out based on state
+df_state1_ps <- rss_pdstate$df %>% filter(state_f_x1 == "1") %>% arrange(get("pd_z_x1"))
+df_state2_ps <- rss_pdstate$df %>% filter(state_f_x1 == "2") %>% arrange(get("pd_z_x1"))
+
+#calculate SE of the difference (using a conservative approximation, ignoring covariance)
+#SE_diff = sqrt(SE_1^2 + SE_2^2)
+se_diff_ps <- sqrt(((df_state1_ps$upr-df_state1_ps$lwr)/3.92)^2 + ((df_state2_ps$upr-df_state2_ps$lwr)/3.92)^2)
+
+#create a new data frame for the difference plot
+df_diff_ps <- data.frame(
+  z_score = df_state1_ps[["pd_z_x1"]],
+  log_rss_diff = df_state2_ps$log_rss - df_state1_ps$log_rss,
+  # Calculate 95% CI bounds (Z-score 1.96 for 95%)
+  lwr_diff = (df_state2_ps$log_rss - df_state1_ps$log_rss) - 1.96 * se_diff_ps,
+  upr_diff = (df_state2_ps$log_rss - df_state1_ps$log_rss) + 1.96 * se_diff_ps
+)
+
+#plot the difference with confidence interval
+plot_pdstate <- ggplot(df_diff_ps, aes(x = z_score, y = log_rss_diff)) + 
+  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
+  geom_line(linewidth = 1.2, color = "darkblue") +
+  # Add the confidence interval ribbon
+  geom_ribbon(aes(ymin = lwr_diff, ymax = upr_diff), alpha = 0.2, fill = "darkblue") +
+  theme_bw() +
+  labs(
+    title = "State-Dependent Effect: Difference in PD Selection",
+    x = "PD (z-score)",
+    y = "log-RSS Difference (State 2 - State 1)"
+  )
+
+plot_pdstate
+
+##Looks like our fish like larger patches, but areas with more of them!
+
+##And thus concludes our workshop on going from raw acoustic telemetry data through analyses to results. Yes, yes, yes. 
+##In the title, we said "Downloads to Discussions." So where is the discussion section? Well friends, that is up to you to interpret your data.
+##For this example, you will just have to read the paper when it is out! Thanks for joining us!
 

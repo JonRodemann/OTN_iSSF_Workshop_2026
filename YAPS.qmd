@@ -17,7 +17,7 @@ This vignette uses the yaps package to calculate fish position and then goes ove
 [R script](code/Code_Workshop_OTN_2026_YAPS_HMM_iSSF.R)
 
 ## Data
-The data used for this example was collected by Rodemann, Costa et al. in Florida Bay. Acoustic telemetry data is from tagged spotted seatrout and environmental data is from field surveys done by Rodemann, Costa and team. 
+The data used for this example was collected by Rodemann, Costa et al. in Florida Bay. Acoustic telemetry data is from tagged Spotted Seatrout (_Cynoscion nebulosus_) and environmental data is from field surveys done by Rodemann, Costa and team. 
   
 ![Map of YAPS Array in Rankin Basin](maps/Array_map.png)
 
