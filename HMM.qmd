@@ -1,6 +1,6 @@
 ---
 title: "HMMs"
-authors: "Jonathan Rodemann, Sophia Costa"
+authors: "Jonathan Rodemann, Sophia Costa, Jennifer Rehage"
 format: 
   html:
     toc: true
@@ -12,7 +12,7 @@ knitr::opts_chunk$set(collapse = T, cache = T)
 ```
 
 ## Hidden Markov Models
-This vignette goes over the process for getting positional data ready for HMM analysis and running the analysis using the moveHMM package.
+This section goes over the process for getting positional data ready for HMM analysis and running the analysis using the moveHMM package.
 
 ```{r}
 #Load in libraries
@@ -156,12 +156,6 @@ hmm_data_30 <- prepData(interp_df_30, type = "UTM", coordNames = c("x", "y"))
 # Remove rows with zero or NA step (stay/missing movement) because gamma requires positive steps
 hmm_data_30 <- hmm_data_30 %>% filter(!is.na(step) & step > 0) %>% filter(!is.na(angle))
 
-hmm_data_30 <- hmm_data_30 %>%
-  filter(is.finite(step), is.finite(angle), step > 0) %>%
-  mutate(
-    step = pmax(step, quantile(step, 0.01, na.rm = TRUE)),
-    step = pmin(step, quantile(step, 0.99, na.rm = TRUE))
-  )
 ```
 
 ## Determining the initial step lengths and turn angles for the model
@@ -171,15 +165,15 @@ We have prepped our data. However, it is still not just plug and play. We need t
 ```{r}
 hist(hmm_data_30$step, breaks = 20, freq = F, main = "Step lengths")
 curve(dgamma(x, shape = 1.5, rate=0.9), n=200, add=TRUE, col="royalblue", lwd=4) #shape is how right-skewed the gamma curve is
-curve(dgamma(x, shape = 1.9, rate=0.7), n=200, add=TRUE, col="cadetblue", lwd=4) #rate is how tall the curve apex is
+curve(dgamma(x, shape = 1.9, rate=0.6), n=200, add=TRUE, col="cadetblue", lwd=4) #rate is how tall the curve apex is
 curve(dgamma(x, shape = 2.2, rate=0.4), n=200, add=TRUE, col="navyblue", lwd=4)
 
 #assign initial step length distributions
-sl_init_mean <- c(2.2/0.4, 1.5/0.9) #initial means should be the shape/rate for both
-sl_init_sd <- c(sqrt(2.2)/0.7, sqrt(1.5)/0.9) #initial standard deviations should be square root of shape/rate
+sl_init_mean <- c(1.9/0.6, 1.5/0.9) #initial means should be the shape/rate for both
+sl_init_sd <- c(sqrt(1.9)/0.6, sqrt(1.5)/0.9) #initial standard deviations should be square root of shape/rate
 ```
 
-This is a little subjective, but there is a good starting out point. The first curve encompasses the lower step lengths well. The second curve does not really add any more information either than including the step lengths that are longer. However, the third curve does this but also includes the higher amount of longer steps. So let's go with the first and third curves
+This is a little subjective, but there is a good starting out point. The first curve encompasses the lower step lengths well.The third curve does not really do a good job because it is spread out too far. So let's go with the first and second curves
 
 Now we do the same thing for the turn angles. However, we want the model to try to find states with opposite turn angles (turn 180 degrees vs straight). Therefore, we will play with the numbers a little.
 

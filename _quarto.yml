@@ -16,7 +16,7 @@ website:
     - text: "Environmental Variables"
       href: Enviro.html
     - text: 'Integrated Step Selection Functions'
-      href: GAM.html
+      href: iSSF.html
 
 format:
   html:

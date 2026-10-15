@@ -1,6 +1,6 @@
 ---
 title: "YAPS and Data filtering"
-authors: "Jonathan Rodemann, Sophia Costa"
+authors: "Jonathan Rodemann, Sophia Costa, Jennifer Rehage"
 format: 
   html:
     toc: true

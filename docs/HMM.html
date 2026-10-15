@@ -141,7 +141,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span class="menu-text">Environmental Variables</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./GAM.html"> 
+    <a class="nav-link" href="./iSSF.html"> 
 <span class="menu-text">Integrated Step Selection Functions</span></a>
   </li>  
 </ul>
@@ -184,7 +184,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Author</div>
     <div class="quarto-title-meta-contents">
-             <p>Jonathan Rodemann, Sophia Costa </p>
+             <p>Jonathan Rodemann, Sophia Costa, Jennifer Rehage </p>
           </div>
   </div>
     
@@ -199,7 +199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="hidden-markov-models" class="level2">
 <h2 class="anchored" data-anchor-id="hidden-markov-models">Hidden Markov Models</h2>
-<p>This vignette goes over the process for getting positional data ready for HMM analysis and running the analysis using the moveHMM package.</p>
+<p>This section goes over the process for getting positional data ready for HMM analysis and running the analysis using the moveHMM package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load in libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -385,14 +385,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># moveHMM uses a column 'step' and 'angle' (radians) created by prepData</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove rows with zero or NA step (stay/missing movement) because gamma requires positive steps</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>hmm_data_30 <span class="ot">&lt;-</span> hmm_data_30 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(step) <span class="sc">&amp;</span> step <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(angle))</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>hmm_data_30 <span class="ot">&lt;-</span> hmm_data_30 <span class="sc">%&gt;%</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">is.finite</span>(step), <span class="fu">is.finite</span>(angle), step <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">step =</span> <span class="fu">pmax</span>(step, <span class="fu">quantile</span>(step, <span class="fl">0.01</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">step =</span> <span class="fu">pmin</span>(step, <span class="fu">quantile</span>(step, <span class="fl">0.99</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>hmm_data_30 <span class="ot">&lt;-</span> hmm_data_30 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(step) <span class="sc">&amp;</span> step <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(angle))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="determining-the-initial-step-lengths-and-turn-angles-for-the-model" class="level2">
@@ -401,7 +394,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(hmm_data_30<span class="sc">$</span>step, <span class="at">breaks =</span> <span class="dv">20</span>, <span class="at">freq =</span> F, <span class="at">main =</span> <span class="st">"Step lengths"</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dgamma</span>(x, <span class="at">shape =</span> <span class="fl">1.5</span>, <span class="at">rate=</span><span class="fl">0.9</span>), <span class="at">n=</span><span class="dv">200</span>, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">"royalblue"</span>, <span class="at">lwd=</span><span class="dv">4</span>) <span class="co">#shape is how right-skewed the gamma curve is</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dgamma</span>(x, <span class="at">shape =</span> <span class="fl">1.9</span>, <span class="at">rate=</span><span class="fl">0.7</span>), <span class="at">n=</span><span class="dv">200</span>, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">"cadetblue"</span>, <span class="at">lwd=</span><span class="dv">4</span>) <span class="co">#rate is how tall the curve apex is</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dgamma</span>(x, <span class="at">shape =</span> <span class="fl">1.9</span>, <span class="at">rate=</span><span class="fl">0.6</span>), <span class="at">n=</span><span class="dv">200</span>, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">"cadetblue"</span>, <span class="at">lwd=</span><span class="dv">4</span>) <span class="co">#rate is how tall the curve apex is</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">curve</span>(<span class="fu">dgamma</span>(x, <span class="at">shape =</span> <span class="fl">2.2</span>, <span class="at">rate=</span><span class="fl">0.4</span>), <span class="at">n=</span><span class="dv">200</span>, <span class="at">add=</span><span class="cn">TRUE</span>, <span class="at">col=</span><span class="st">"navyblue"</span>, <span class="at">lwd=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
@@ -412,10 +405,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="co">#assign initial step length distributions</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>sl_init_mean <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">2.2</span><span class="sc">/</span><span class="fl">0.4</span>, <span class="fl">1.5</span><span class="sc">/</span><span class="fl">0.9</span>) <span class="co">#initial means should be the shape/rate for both</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>sl_init_sd <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(<span class="fl">2.2</span>)<span class="sc">/</span><span class="fl">0.7</span>, <span class="fu">sqrt</span>(<span class="fl">1.5</span>)<span class="sc">/</span><span class="fl">0.9</span>) <span class="co">#initial standard deviations should be square root of shape/rate</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>sl_init_mean <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.9</span><span class="sc">/</span><span class="fl">0.6</span>, <span class="fl">1.5</span><span class="sc">/</span><span class="fl">0.9</span>) <span class="co">#initial means should be the shape/rate for both</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>sl_init_sd <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(<span class="fl">1.9</span>)<span class="sc">/</span><span class="fl">0.6</span>, <span class="fu">sqrt</span>(<span class="fl">1.5</span>)<span class="sc">/</span><span class="fl">0.9</span>) <span class="co">#initial standard deviations should be square root of shape/rate</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This is a little subjective, but there is a good starting out point. The first curve encompasses the lower step lengths well. The second curve does not really add any more information either than including the step lengths that are longer. However, the third curve does this but also includes the higher amount of longer steps. So let’s go with the first and third curves</p>
+<p>This is a little subjective, but there is a good starting out point. The first curve encompasses the lower step lengths well.The third curve does not really do a good job because it is spread out too far. So let’s go with the first and second curves</p>
 <p>Now we do the same thing for the turn angles. However, we want the model to try to find states with opposite turn angles (turn 180 degrees vs straight). Therefore, we will play with the numbers a little.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(hmm_data_30<span class="sc">$</span>angle, <span class="at">breaks =</span> <span class="dv">30</span>, <span class="at">freq =</span> F, <span class="at">main =</span> <span class="st">"Turn angles"</span>)</span>

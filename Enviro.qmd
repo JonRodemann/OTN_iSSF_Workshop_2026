@@ -1,6 +1,6 @@
 ---
 title: "Environmental Variables"
-authors: "Jonathan Rodemann, Sophia Costa"
+authors: "Jonathan Rodemann, Sophia Costa, Jennifer Rehage"
 format: 
   html:
     toc: true
@@ -14,7 +14,7 @@ knitr::opts_chunk$set(collapse = T, cache = T)
 ## Environmental Variables
 This section goes over what environmental variables we are using for our iSSFs. In this example, we will be using a two class (dense and sparse/bare) map of submerged aquatic vegetation (SAV) mapped using aerial imagery flown over our study site. The map was made using photointerpreted points to train a Random Forest algorithm on the spectral information within the aerial imagery. We will be using this map to also calculate spatial pattern metrics using the dense class of SAV, which are measures of composition and configuration of the seascape. Included in this section will also be the setup of the data for iSSFs, including calculating the "false" steps that the iSSFs use to determine habitat selection.
 
-We will end up with 6 environmental variables: class of SAV, PLAND (Percentage of Landscape that the dense SAV class makes up), Edge Density (the density of edges of the dense SAV class), Patch Density (the density of patches of the dense SAV class), Division (a measure of likelihood that an adjacent cell is the same class as the cell you are calculating this metric on), and Mean Shape (a measure of how complex the patches of dense SAV are). This is where you can substitute any environmental data you may have based on your questions. 
+We will end up with 6 environmental variables: class of SAV, PLAND (Percentage of Landscape that the dense SAV class makes up), Edge Density (the density of edges of the dense SAV class), Patch Density (the density of patches of the dense SAV class), Division (a measure of likelihood that two randomly selected cells are not the same patch), and Mean Shape (a measure of how complex the patches of dense SAV are). This is where you can substitute any environmental data you may have based on your questions. 
 
 ```{r}
 #Load in libraries
@@ -46,10 +46,18 @@ fish_trackr <- rdat %>%
     state = state)
 
 # Convert the track to observed steps, grouped by track
-# This calculates step length (sl_) and turn angle (ta_) for the observed steps.
+# This calculates step length (sl_) and turn angle (ta_) for the observed steps. You have to nest by ID or else 
+#it thinks it is one long track
 steps_obsr <- fish_trackr %>%
-  steps(keep_cols = 'end') %>% 
-  dplyr::filter(!is.na(ta_))
+  # Isolate each fish's track into a list-column called 'data'
+  nest(data = -id) %>%
+  # Apply steps() to each nested track independently
+  mutate(
+    step_data = map(data, ~ steps(.x, keep_cols = "start"))
+  ) %>%
+  # Keep only the ID and the new step data, then expand back to a normal dataframe
+  select(id, step_data) %>%
+  unnest(cols = step_data)
 ```
 
 ## Generating random steps for iSSFs
@@ -86,6 +94,8 @@ sr2 <- st_as_sf(sr, coords = c("x2_", "y2_"), crs = st_crs(rmap_kernel)) %>% ter
 ```
 
 If the class is 2, it is dense SAV and if it is 1, it is sparse SAV/bare sediment. Now that we have our classes extracted, we are going to calculate some spatial pattern metrics. To do this, we are going to calculate the 5 variables brought up in the intro: PLAND, ED, PD, Divisionm and Shape_mn.
+
+## Calculating spatial pattern metrics
 
 This next code block runs the spatial pattern metrics. However, it takes about 6.5 minutes to run this on a fast computer. For the sake of time, we are going to provide the resulting dataset. Unlike the YAPS position calculations, this code WILL work if you decide to run it. This will be the last step before we run the iSSFs!
 
