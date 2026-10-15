@@ -1,6 +1,6 @@
 ---
 title: "Environmental Variables"
-authors: "Jonathan Rodemann, Sophia Costa, Jennifer Rehage"
+authors: "Jonathan Rodemann, Sophia Costa, Jennifer Rehage, Cameron Aktinson"
 format: 
   html:
     toc: true

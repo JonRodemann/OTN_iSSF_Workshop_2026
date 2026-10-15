@@ -1,6 +1,6 @@
 ---
 title: "HMMs"
-authors: "Jonathan Rodemann, Sophia Costa, Jennifer Rehage"
+authors: "Jonathan Rodemann, Sophia Costa, Jennifer Rehage, Cameron Aktinson, Camille Demaire"
 format: 
   html:
     toc: true
