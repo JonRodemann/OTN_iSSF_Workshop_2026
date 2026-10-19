@@ -59,7 +59,7 @@ Package paper: [Signer et al., 2019. Animal movement tools (amt): R package for 
 
 RSF using broad-scale acoustic telemetry: [Rodemann et al., 2025. Hierarchical habitat selection by a predatory fish in a patchy seascape. Sci. Rep.](https://doi.org/10.1038/s41598-025-27322-0)\
 
-YAPS: Costa et al. 2026. Finding a home in a fragmented world: Multi-scale habitat selection of Spotted Seatrout in an area of seagrass recovery. *in prep*.\
+YAPS: Costa et al. 2026. Fine-scale fish movement reveals habitat use across recovering seagrass seascapes. *in prep*.\
 
 ### Instructions to download this course:
 
