@@ -124,6 +124,12 @@ ggplot()+
   geom_point(data = real_34507_31, aes(x = x, y = y), color = 'darkgreen', inherit.aes = F)+
   theme_classic()
 
+#34507_31 with interpolated tracks on top of real data
+ggplot()+
+  geom_point(data = real_34507_31, aes(x = x, y = y), color = 'darkgreen')+
+  geom_point(data = int_34507_31, aes(x = x, y = y), color = 'purple', inherit.aes = F)+
+  theme_classic()
+
 #34518_12
 int_34518_12 <- interp_df %>% dplyr::filter(ID == '34518_12')
 real_34518_12 <- dat %>% dplyr::filter(tag == '34518') %>% dplyr::filter(track == 12)

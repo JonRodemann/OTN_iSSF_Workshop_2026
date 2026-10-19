@@ -147,7 +147,7 @@ plotYaps(yaps_out_34507)
 #This is where we will leave it for the YAPS run. We encourage all of you if you are interested to explore the package, as it can even run simulations! Now onto the data exploration and filtering
 
 ## Data filtering, exploration and graphing
-In this section, we will look at the data, filter it based on the positional error from the YAPS algorithm, explore the data, and thengraph it as an abacus plot (yay!) as well as on a map. Then we will prep it for the HMM analysis.
+In this section, we will look at the data, filter it based on the positional error from the YAPS algorithm, explore the data, and then graph it as an abacus plot (yay!) as well as on a map. Then we will prep it for the HMM analysis.
 
 ```{r}
 #Load in libraries
