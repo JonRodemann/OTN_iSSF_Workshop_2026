@@ -85,13 +85,13 @@ sl_range <- seq(0.1, 27.054, length.out = 100) #range of step lengths (meters)
 ang_range <- seq(-3.14, 3.14, length.out = 100) #range of turn angles (radians)
 z_range <- seq(-2.1, 2.1, length.out = 100) #range of environmental variables (z-score)
 n_points <- length(sl_range) # 100
-hab_vars <- c("pland_z", "ed_z", "pd_z", "shape_mn_z", "division_z")
+hab_vars <- c("pland_z", "ed_z", "pd_z", "shape_mn_z")
 
 #create the dataset to test across for step length, keeping everything else constant
 tsl <- data.frame(
   sl_ = sl_range, 
   ta_ = rep(ang_mean, n_points),             
-  pland_z = rep(0, n_points), ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), division_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
+  pland_z = rep(0, n_points), ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
   state_f = factor(rep("1", n_points), levels = c("1", "2")), 
   class = factor(rep("1", n_points), levels = c("1", "2"))  
 )
@@ -101,7 +101,7 @@ tsl <- data.frame(
 msl <- data.frame(
   sl_ = sl_mean, 
   ta_ = ang_mean, 
-  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0,
   state_f = factor("1", levels = c("1", "2")),
   class = factor("1", levels = c("1", "2"))
 )
@@ -130,7 +130,7 @@ Looks like our fish prefer really short steps compared to the random steps creat
 tang <- data.frame(
   sl_ = rep(sl_mean, n_points), 
   ta_ = ang_range,             
-  pland_z = rep(0, n_points), ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), division_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
+  pland_z = rep(0, n_points), ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
   state_f = factor(rep("1", n_points), levels = c("1", "2")), 
   class = factor(rep("1", n_points), levels = c("1", "2"))  
 )
@@ -139,7 +139,7 @@ tang <- data.frame(
 mang <- data.frame(
   sl_ = sl_mean, 
   ta_ = ang_mean, 
-  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0,
   state_f = factor("1", levels = c("1", "2")),
   class = factor("1", levels = c("1", "2"))
 )
@@ -170,7 +170,7 @@ Looks like our fish liked to go less straight than the random steps. We can also
 tpland <- data.frame(
   sl_ = rep(sl_mean, n_points), 
   ta_ = rep(ang_mean, n_points),             
-  pland_z = z_range, ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), division_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
+  pland_z = z_range, ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
   state_f = factor(rep("1", n_points), levels = c("1", "2")), 
   class = factor(rep("1", n_points), levels = c("1", "2"))  
 )
@@ -179,7 +179,7 @@ tpland <- data.frame(
 mpland <- data.frame(
   sl_ = sl_mean, 
   ta_ = ang_mean, 
-  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0,
   state_f = factor("1", levels = c("1", "2")),
   class = factor("1", levels = c("1", "2"))
 )
@@ -209,7 +209,7 @@ Looks like our fish prefer seascapes with more dense SAV in them! Now we can loo
 tpdstate <- data.frame(
   sl_ = rep(sl_mean, n_points*2), 
   ta_ = rep(ang_mean, n_points*2),             
-  pland_z = rep(0, n_points*2), ed_z = rep(0, n_points*2), pd_z = rep(z_range, 2), shape_mn_z = rep(0, n_points*2), division_z = rep(0, n_points*2), #all of the environmental variables are centered around 0 because they are z-scored
+  pland_z = rep(0, n_points*2), ed_z = rep(0, n_points*2), pd_z = rep(z_range, 2), shape_mn_z = rep(0, n_points*2), #all of the environmental variables are centered around 0 because they are z-scored
   state_f = factor(rep(c("1", "2"), each = n_points)), 
   class = factor(rep("1", n_points), levels = c("1", "2"))  
 )
@@ -218,7 +218,7 @@ tpdstate <- data.frame(
 mpdstate <- data.frame(
   sl_ = sl_mean, 
   ta_ = ang_mean, 
-  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0,
   state_f = factor("1", levels = c("1", "2")),
   class = factor("1", levels = c("1", "2"))
 )
