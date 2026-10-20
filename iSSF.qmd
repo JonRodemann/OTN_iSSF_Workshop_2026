@@ -20,6 +20,7 @@ library(amt) #Package that iSSFs are in
 library(tidyverse)
 library(survival)
 library(ggeffects)
+library(corrplot)
 
 strue <- read_csv('data/data_environmental.csv')
 
@@ -38,12 +39,17 @@ steps_finalr <- strue %>%
     state_f = factor(state)
   ) %>% drop_na()
 
+head(steps_finalr)
+corrplot(cor(steps_finalr[,2:6]))
+
+#PLAND and division are highly correlated. Division is also correlated with pd. Let's remove division from our analysis
+
 # Fit the iSSF using conditional logistic regression (clogit).
 issf_modelr <- steps_finalr %>%
   drop_na() %>% 
   fit_clogit(case_ ~
                # Movement terms 
-               sl_ + I(sl_^2) +
+               sl_ + log(sl_) +
                cos(ta_) +
                # Habitat selection with interaction with HMM state
                pland_z * state_f + 
@@ -51,7 +57,6 @@ issf_modelr <- steps_finalr %>%
                pd_z * state_f +
                shape_mn_z * state_f +
                class * state_f +
-               division_z * state_f +
                # The required stratification term for iSSF
                strata(step_id_), model = T
   )
@@ -60,7 +65,7 @@ summary(issf_modelr)
 ```
 
 There are no significant effects except for step length and turn angle. But because this is a workshop, we are going to
-graph things anyway! The most single significant effect is the percentage of landscape that is dense SAV. There are no significant interaction effects, but pd and division are close. So we will go over how to graph these interactions and then we can answer any questions! 
+graph things anyway! The most single significant effect is the percentage of landscape that is dense SAV. There are no significant interaction effects, but pd is close. So we will go over how to graph these interactions and then we can answer any questions! 
 
 ## Graphing results
 
@@ -118,7 +123,7 @@ plot_sl <- ggplot(rss_sl$df, aes(x = sl_x1, y = log_rss)) +
 plot_sl
 ```
 
-Looks like our fish prefer really short steps or really long ones compared to the random steps created. The random steps were created using distributions from the actual data. Now let's graph turn angle
+Looks like our fish prefer really short steps compared to the random steps created. The random steps were created using distributions from the actual data. Now let's graph turn angle
 
 ```{r}
 #create the dataset to test across for turn angle, keeping everything else constant
@@ -197,64 +202,7 @@ plot_pland <- ggplot(rss_pland$df, aes(x = pland_z_x1, y = log_rss)) +
 plot_pland
 ```
 
-Looks like our fish prefer seascapes with more dense SAV in them! Now we can look at the interactions between state and environmental variables. If there was a significant result, that would mean that the fish preferred certain environmental variables when in a certain state. The most significant interaction was state and division, but pd was also close. We will graph both, starting with division
-
-```{r}
-#create the dataset to test across for both state and division, keeping everything else constant
-tdivstate <- data.frame(
-  sl_ = rep(sl_mean, n_points*2), 
-  ta_ = rep(ang_mean, n_points*2),             
-  pland_z = rep(0, n_points*2), ed_z = rep(0, n_points*2), pd_z = rep(0, n_points*2), shape_mn_z = rep(0, n_points*2), division_z = rep(z_range, 2), #all of the environmental variables are centered around 0 because they are z-scored
-  state_f = factor(rep(c("1", "2"), each = n_points)), 
-  class = factor(rep("1", n_points), levels = c("1", "2"))  
-)
-
-#1-row
-mdivstate <- data.frame(
-  sl_ = sl_mean, 
-  ta_ = ang_mean, 
-  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
-  state_f = factor("1", levels = c("1", "2")),
-  class = factor("1", levels = c("1", "2"))
-)
-
-#Calculate the log relative selection strength (log-RSS) for both states relative to baseline
-rss_divstate <- log_rss(issf_modelr, x1 = tdivstate, x2 = mdivstate, ci = 'se')
-
-#separate out based on state
-df_state1 <- rss_divstate$df %>% filter(state_f_x1 == "1") %>% arrange(get("division_z_x1"))
-df_state2 <- rss_divstate$df %>% filter(state_f_x1 == "2") %>% arrange(get("division_z_x1"))
-
-#calculate SE of the difference (using a conservative approximation, ignoring covariance)
-#SE_diff = sqrt(SE_1^2 + SE_2^2)
-se_diff <- sqrt(((df_state1$upr-df_state1$lwr)/3.92)^2 + ((df_state2$upr-df_state2$lwr)/3.92)^2)
-
-#create a new data frame for the difference plot
-df_diff <- data.frame(
-  z_score = df_state1[["division_z_x1"]],
-  log_rss_diff = df_state2$log_rss - df_state1$log_rss,
-  # Calculate 95% CI bounds (Z-score 1.96 for 95%)
-  lwr_diff = (df_state2$log_rss - df_state1$log_rss) - 1.96 * se_diff,
-  upr_diff = (df_state2$log_rss - df_state1$log_rss) + 1.96 * se_diff
-)
-
-#plot the difference with confidence interval
-plot_divstate <- ggplot(df_diff, aes(x = z_score, y = log_rss_diff)) + 
-  geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
-  geom_line(linewidth = 1.2, color = "darkblue") +
-  # Add the confidence interval ribbon
-  geom_ribbon(aes(ymin = lwr_diff, ymax = upr_diff), alpha = 0.2, fill = "darkblue") +
-  theme_bw() +
-  labs(
-    title = "State-Dependent Effect: Difference in Division Selection",
-    x = "Division (z-score)",
-    y = "log-RSS Difference (State 2 - State 1)"
-  )
-
-plot_divstate
-```
-
-Not significant, but shows that fish are more likely to be in state 2 ("foraging state") over areas with either larger dense SAV patches or little dense SAV. So how about PD?
+Looks like our fish prefer seascapes with more dense SAV in them! Now we can look at the interactions between state and environmental variables. If there was a significant result, that would mean that the fish preferred certain environmental variables when in a certain state. The most significant interaction was pd and division, so let's graph it!
 
 ```{r}
 #create the dataset to test across for both state and pd, keeping everything else constant
@@ -311,7 +259,7 @@ plot_pdstate <- ggplot(df_diff_ps, aes(x = z_score, y = log_rss_diff)) +
 plot_pdstate
 ```
 
-Looks like our fish like larger patches, but areas with more of them!
+Looks like our fish like areas with more patches!
 
 And thus concludes our workshop on going from raw acoustic telemetry data through analyses to results. Yes, yes, yes. 
 In the title, we said "Downloads to Discussions." So where is the discussion section? Well friends, that is up to you to interpret your data. For this example, you will just have to read the paper when it is out! Thanks for joining us! We will now take any questions.
