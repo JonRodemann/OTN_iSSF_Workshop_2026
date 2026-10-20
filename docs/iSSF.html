@@ -199,56 +199,69 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Load in libraries</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(amt) <span class="co">#Package that iSSFs are in</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggeffects)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">## corrplot 0.95 loaded</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>strue <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'data/data_environmental.csv'</span>)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">## New names:</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="do">## • `` -&gt; `...1`</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 51195 Columns: 20</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="do">## ── Column specification ────────────────────────────────────────────────────────</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="do">## Delimiter: ","</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="do">## chr   (1): id</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="do">## dbl  (16): ...1, division, ed, pd, pland, shape_mn, x1_, x2_, y1_, y2_, sl_,...</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="do">## lgl   (1): case_</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="do">## dttm  (2): t1_, t2_</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Use `spec()` to retrieve the full column specification for this data.</span></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize continuous habitat variables (z-score transformation)</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># This helps with model convergence and interpretation of interaction terms.</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>steps_finalr <span class="ot">&lt;-</span> strue <span class="sc">%&gt;%</span></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Standardize continuous habitat covariates</span></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">pland_z =</span> <span class="fu">scale</span>(pland)[, <span class="dv">1</span>],</span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">ed_z =</span> <span class="fu">scale</span>(ed)[, <span class="dv">1</span>],</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">pd_z =</span> <span class="fu">scale</span>(pd)[, <span class="dv">1</span>],</span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape_mn_z =</span> <span class="fu">scale</span>(shape_mn)[, <span class="dv">1</span>],</span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">division_z =</span> <span class="fu">scale</span>(division)[,<span class="dv">1</span>],</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert state to a factor for proper modeling interaction</span></span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">state_f =</span> <span class="fu">factor</span>(state)</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>()</span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(steps_finalr)</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 6 × 26</span></span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="do">##    ...1 division    ed     pd pland shape_mn id         x1_    x2_    y1_    y2_</span></span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     1    0.257 8545.  8300.  86.3     2.04 34518_1 5.19e5 5.19e5 2.78e6 2.78e6</span></span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     2    0.267 8431. 17997.  85.8     1.48 34518_1 5.19e5 5.19e5 2.78e6 2.78e6</span></span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     3    0.258 8540.  8303.  86.2     2.04 34518_1 5.19e5 5.19e5 2.78e6 2.78e6</span></span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     4    0.257 7904. 11070.  86.3     1.72 34518_1 5.19e5 5.19e5 2.78e6 2.78e6</span></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     5    0.264 8482. 11065.  85.9     1.78 34518_1 5.19e5 5.19e5 2.78e6 2.78e6</span></span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     6    0.262 8519. 13839.  86.0     1.67 34518_1 5.19e5 5.19e5 2.78e6 2.78e6</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="do">## # ℹ 15 more variables: sl_ &lt;dbl&gt;, ta_ &lt;dbl&gt;, state &lt;dbl&gt;, t1_ &lt;dttm&gt;,</span></span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="do">## #   t2_ &lt;dttm&gt;, dt_ &lt;dbl&gt;, case_ &lt;lgl&gt;, step_id_ &lt;dbl&gt;, class &lt;dbl&gt;,</span></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="do">## #   pland_z &lt;dbl&gt;, ed_z &lt;dbl&gt;, pd_z &lt;dbl&gt;, shape_mn_z &lt;dbl&gt;, division_z &lt;dbl&gt;,</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="do">## #   state_f &lt;fct&gt;</span></span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(<span class="fu">cor</span>(steps_finalr[,<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Attaching package: 'amt'</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="do">## The following object is masked from 'package:stats':</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="do">##     filter</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="do">## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ dplyr     1.1.4     ✔ readr     2.1.5</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ forcats   1.0.1     ✔ stringr   1.5.2</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="do">## ✔ purrr     1.1.0</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="do">## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ dplyr::filter() masks amt::filter(), stats::filter()</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="do">## ✖ dplyr::lag()    masks stats::lag()</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(survival)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggeffects)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="do">## corrplot 0.95 loaded</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>strue <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">'data/data_environmental.csv'</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="do">## New names:</span></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="do">## Rows: 51180 Columns: 21</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="do">## ── Column specification</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="do">## ──────────────────────────────────────────────────────── Delimiter: "," chr</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="do">## (1): id dbl (17): ...1, ...2, division, ed, pd, pland, shape_mn, x1_, x2_, y1_,</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="do">## y2_... lgl (1): case_ dttm (2): t1_, t2_</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="do">## ℹ Use `spec()` to retrieve the full column specification for this data. ℹ</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="do">## Specify the column types or set `show_col_types = FALSE` to quiet this message.</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="do">## • `` -&gt; `...1`</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="do">## • `...1` -&gt; `...2`</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="co"># Standardize continuous habitat variables (z-score transformation)</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="co"># This helps with model convergence and interpretation of interaction terms.</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>steps_finalr <span class="ot">&lt;-</span> strue <span class="sc">%&gt;%</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Standardize continuous habitat covariates</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">pland_z =</span> <span class="fu">scale</span>(pland)[, <span class="dv">1</span>],</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>    <span class="at">ed_z =</span> <span class="fu">scale</span>(ed)[, <span class="dv">1</span>],</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    <span class="at">pd_z =</span> <span class="fu">scale</span>(pd)[, <span class="dv">1</span>],</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape_mn_z =</span> <span class="fu">scale</span>(shape_mn)[, <span class="dv">1</span>],</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    <span class="at">division_z =</span> <span class="fu">scale</span>(division)[,<span class="dv">1</span>],</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert state to a factor for proper modeling interaction</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">state_f =</span> <span class="fu">factor</span>(state)</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>()</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(steps_finalr)</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 6 × 27</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="do">##    ...1  ...2 division    ed     pd pland shape_mn id          x1_    x2_    y1_</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="do">##   &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="do">## 1     1     1    0.257 8545.  8300.  86.3     2.04 34518_1 518711. 5.19e5 2.78e6</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="do">## 2     2     2    0.289 8007. 17988.  84.5     1.51 34518_1 518711. 5.19e5 2.78e6</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a><span class="do">## 3     3     3    0.265 8353. 17981.  85.9     1.48 34518_1 518711. 5.19e5 2.78e6</span></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="do">## 4     4     4    0.262 7716. 11068.  86.0     1.70 34518_1 518711. 5.19e5 2.78e6</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a><span class="do">## 5     5     5    0.265 8153. 11070.  85.8     1.74 34518_1 518711. 5.19e5 2.78e6</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a><span class="do">## 6     6     6    0.279 8451. 16594.  85.1     1.59 34518_1 518711. 5.19e5 2.78e6</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a><span class="do">## # ℹ 16 more variables: y2_ &lt;dbl&gt;, sl_ &lt;dbl&gt;, ta_ &lt;dbl&gt;, state &lt;dbl&gt;,</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="do">## #   t1_ &lt;dttm&gt;, t2_ &lt;dttm&gt;, dt_ &lt;dbl&gt;, case_ &lt;lgl&gt;, step_id_ &lt;dbl&gt;,</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="do">## #   class &lt;dbl&gt;, pland_z &lt;dbl&gt;, ed_z &lt;dbl&gt;, pd_z &lt;dbl&gt;, shape_mn_z &lt;dbl&gt;,</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a><span class="do">## #   division_z &lt;dbl&gt;, state_f &lt;fct&gt;</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(<span class="fu">cor</span>(steps_finalr[,<span class="dv">2</span><span class="sc">:</span><span class="dv">6</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -278,51 +291,51 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(issf_modelr)</span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="do">## Call:</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="do">## coxph(formula = Surv(rep(1, 51195L), case_) ~ sl_ + log(sl_) + </span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="do">## coxph(formula = Surv(rep(1, 51180L), case_) ~ sl_ + log(sl_) + </span></span>
 <span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="do">##     cos(ta_) + pland_z * state_f + ed_z * state_f + pd_z * state_f + </span></span>
 <span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="do">##     shape_mn_z * state_f + class * state_f + strata(step_id_), </span></span>
 <span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="do">##     data = data, model = ..1, method = "exact")</span></span>
 <span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="do">##   n= 51195, number of events= 4630 </span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="do">##   n= 51180, number of events= 4630 </span></span>
 <span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="do">##                          coef exp(coef)  se(coef)      z Pr(&gt;|z|)    </span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="do">## sl_                 -0.001809  0.998193  0.012124 -0.149  0.88141    </span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="do">## log(sl_)            -0.064068  0.937941  0.020666 -3.100  0.00193 ** </span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="do">## cos(ta_)            -0.178808  0.836267  0.026356 -6.784 1.17e-11 ***</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="do">## pland_z             -0.133008  0.875458  0.215891 -0.616  0.53783    </span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2                   NA        NA  0.000000     NA       NA    </span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="do">## ed_z                -0.072437  0.930124  0.149892 -0.483  0.62891    </span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="do">## pd_z                -0.002714  0.997289  0.157553 -0.017  0.98625    </span></span>
-<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="do">## shape_mn_z          -0.012746  0.987335  0.066046 -0.193  0.84697    </span></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="do">## class                0.054860  1.056392  0.133460  0.411  0.68103    </span></span>
-<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="do">## pland_z:state_f2     0.317712  1.373980  0.279088  1.138  0.25496    </span></span>
-<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:ed_z       -0.064797  0.937257  0.196995 -0.329  0.74221    </span></span>
-<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:pd_z        0.388463  1.474713  0.207230  1.875  0.06085 .  </span></span>
-<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:shape_mn_z  0.057526  1.059213  0.081198  0.708  0.47866    </span></span>
-<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:class       0.023068  1.023337  0.164075  0.141  0.88819    </span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="do">##                         coef exp(coef) se(coef)      z Pr(&gt;|z|)    </span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="do">## sl_                 -0.01056   0.98950  0.01224 -0.863   0.3883    </span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="do">## log(sl_)            -0.05245   0.94890  0.02072 -2.531   0.0114 *  </span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="do">## cos(ta_)            -0.18652   0.82984  0.02644 -7.056 1.72e-12 ***</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="do">## pland_z             -0.06627   0.93588  0.21818 -0.304   0.7613    </span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2                  NA        NA  0.00000     NA       NA    </span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="do">## ed_z                -0.10229   0.90277  0.15234 -0.671   0.5019    </span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="do">## pd_z                 0.03616   1.03682  0.15904  0.227   0.8201    </span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a><span class="do">## shape_mn_z          -0.07925   0.92381  0.06655 -1.191   0.2338    </span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="do">## class               -0.02442   0.97587  0.13127 -0.186   0.8524    </span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="do">## pland_z:state_f2     0.25518   1.29070  0.27821  0.917   0.3590    </span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:ed_z       -0.03481   0.96579  0.19893 -0.175   0.8611    </span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:pd_z        0.39038   1.47754  0.20997  1.859   0.0630 .  </span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:shape_mn_z  0.15938   1.17278  0.08194  1.945   0.0518 .  </span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:class       0.11596   1.12296  0.16210  0.715   0.4744    </span></span>
 <span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a><span class="do">## ---</span></span>
 <span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="do">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
 <span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="do">##                     exp(coef) exp(-coef) lower .95 upper .95</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="do">## sl_                    0.9982     1.0018    0.9748    1.0222</span></span>
-<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="do">## log(sl_)               0.9379     1.0662    0.9007    0.9767</span></span>
-<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="do">## cos(ta_)               0.8363     1.1958    0.7942    0.8806</span></span>
-<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="do">## pland_z                0.8755     1.1423    0.5734    1.3366</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="do">## sl_                    0.9895     1.0106    0.9660    1.0135</span></span>
+<span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a><span class="do">## log(sl_)               0.9489     1.0539    0.9111    0.9882</span></span>
+<span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a><span class="do">## cos(ta_)               0.8298     1.2051    0.7879    0.8740</span></span>
+<span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a><span class="do">## pland_z                0.9359     1.0685    0.6102    1.4353</span></span>
 <span id="cb2-53"><a href="#cb2-53" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2                   NA         NA        NA        NA</span></span>
-<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="do">## ed_z                   0.9301     1.0751    0.6934    1.2478</span></span>
-<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="do">## pd_z                   0.9973     1.0027    0.7323    1.3581</span></span>
-<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="do">## shape_mn_z             0.9873     1.0128    0.8675    1.1238</span></span>
-<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="do">## class                  1.0564     0.9466    0.8132    1.3722</span></span>
-<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="do">## pland_z:state_f2       1.3740     0.7278    0.7951    2.3743</span></span>
-<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:ed_z          0.9373     1.0669    0.6371    1.3789</span></span>
-<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:pd_z          1.4747     0.6781    0.9825    2.2136</span></span>
-<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:shape_mn_z    1.0592     0.9441    0.9034    1.2419</span></span>
-<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:class         1.0233     0.9772    0.7419    1.4115</span></span>
+<span id="cb2-54"><a href="#cb2-54" aria-hidden="true" tabindex="-1"></a><span class="do">## ed_z                   0.9028     1.1077    0.6697    1.2169</span></span>
+<span id="cb2-55"><a href="#cb2-55" aria-hidden="true" tabindex="-1"></a><span class="do">## pd_z                   1.0368     0.9645    0.7591    1.4161</span></span>
+<span id="cb2-56"><a href="#cb2-56" aria-hidden="true" tabindex="-1"></a><span class="do">## shape_mn_z             0.9238     1.0825    0.8108    1.0525</span></span>
+<span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="do">## class                  0.9759     1.0247    0.7545    1.2622</span></span>
+<span id="cb2-58"><a href="#cb2-58" aria-hidden="true" tabindex="-1"></a><span class="do">## pland_z:state_f2       1.2907     0.7748    0.7482    2.2266</span></span>
+<span id="cb2-59"><a href="#cb2-59" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:ed_z          0.9658     1.0354    0.6540    1.4263</span></span>
+<span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:pd_z          1.4775     0.6768    0.9791    2.2298</span></span>
+<span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:shape_mn_z    1.1728     0.8527    0.9988    1.3771</span></span>
+<span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a><span class="do">## state_f2:class         1.1230     0.8905    0.8173    1.5429</span></span>
 <span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a><span class="do">## </span></span>
-<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="do">## Concordance= 0.511  (se = 0.006 )</span></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="do">## Likelihood ratio test= 84.83  on 13 df,   p=1e-12</span></span>
-<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="do">## Wald test            = 86.35  on 13 df,   p=7e-13</span></span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="do">## Score (logrank) test = 86.78  on 13 df,   p=6e-13</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a><span class="do">## Concordance= 0.515  (se = 0.006 )</span></span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a><span class="do">## Likelihood ratio test= 95  on 13 df,   p=2e-14</span></span>
+<span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="do">## Wald test            = 95.97  on 13 df,   p=1e-14</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="do">## Score (logrank) test = 96.51  on 13 df,   p=8e-15</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>There are no significant effects except for step length and turn angle. But because this is a workshop, we are going to graph things anyway! The most single significant effect is the complexity of the shape of the dense SAV patches. There are no significant interaction effects, but pd and shape are close. So we will go over how to graph these interactions and then we can answer any questions!</p>
 </section>
@@ -332,13 +345,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#First let's set up some consistent values to use for the rest of the graphing</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(steps_finalr<span class="sc">$</span>sl_)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 2.207398</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 2.222047</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(steps_finalr<span class="sc">$</span>sl_)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 27.05371</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 22.5601</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">min</span>(steps_finalr<span class="sc">$</span>sl_)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.0002637721</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.0002388155</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(steps_finalr<span class="sc">$</span>ta_)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.001113539</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.00351562</span></span>
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>sl_mean <span class="ot">&lt;-</span> <span class="fl">2.222</span> <span class="co">#mean step length (meters)</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>ang_mean <span class="ot">&lt;-</span> <span class="fl">0.01</span> <span class="co">#mean turn angle (radians)</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>z_mean <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co">#mean environmental variable (z-score)</span></span>
