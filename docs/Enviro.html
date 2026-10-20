@@ -264,23 +264,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Now that we have our observed data set up for environmental extraction and iSSF calculation, we need to calculate the random steps that the iSSFs need to compare against our observed step. In this workshop, we are just going to do a 10 - 1 ratio, but in the actual paper we are using a 100 to 1 ratio. This will lead to lower error in the model, but take A LOT longer.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Generate random steps (10 random steps for every 1 observed step)</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>steps_randr <span class="ot">&lt;-</span> steps_obsr <span class="sc">%&gt;%</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">random_steps</span>(<span class="at">n_control =</span> <span class="dv">10</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">#We have our random steps, now we need to extract the habitat variables at the end of each step - The HMM state is preserved across each step</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(steps_randr)</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 6 × 13</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">##       x1_     x2_      y1_    y2_     sl_    ta_ id    state t1_                </span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">## *   &lt;dbl&gt;   &lt;dbl&gt;    &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt; &lt;dttm&gt;             </span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 518711. 518712. 2778817. 2.78e6   3.29   0.594 3451…     1 2021-12-22 06:12:13</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 518711. 518713. 2778817. 2.78e6   7.94   0.417 3451…     1 2021-12-22 06:12:13</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 518711. 519080. 2778817. 2.78e6 389.     2.08  3451…     1 2021-12-22 06:12:13</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 518711. 518725. 2778817. 2.78e6 150.     0.281 3451…     1 2021-12-22 06:12:13</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 518711. 518721. 2778817. 2.78e6  10.6    1.79  3451…     1 2021-12-22 06:12:13</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 518711. 518711. 2778817. 2.78e6   0.157 -1.24  3451…     1 2021-12-22 06:12:13</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="do">## # ℹ 4 more variables: t2_ &lt;dttm&gt;, dt_ &lt;drtn&gt;, case_ &lt;lgl&gt;, step_id_ &lt;dbl&gt;</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>sr <span class="ot">&lt;-</span> steps_randr <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">ID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="co">#drop NAs and create an ID column to calculate spatial pattern metrics across</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">19</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>steps_randr <span class="ot">&lt;-</span> steps_obsr <span class="sc">%&gt;%</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">random_steps</span>(<span class="at">n_control =</span> <span class="dv">10</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co">#We have our random steps, now we need to extract the habitat variables at the end of each step - The HMM state is preserved across each step</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(steps_randr)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="do">## # A tibble: 6 × 13</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">##   id          x1_     x2_     y1_    y2_   sl_     ta_ state t1_                </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="do">## * &lt;fct&gt;     &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dttm&gt;             </span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 1 34518_1 518711. 518711.  2.78e6 2.78e6 3.82  -0.805      1 2021-12-22 06:11:13</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="do">## 2 34518_1 518711. 518715.  2.78e6 2.78e6 5.92   1.93       1 2021-12-22 06:11:13</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 34518_1 518711. 518715.  2.78e6 2.78e6 3.84   0.635      1 2021-12-22 06:11:13</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 34518_1 518711. 518712.  2.78e6 2.78e6 0.621  1.02       1 2021-12-22 06:11:13</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="do">## 5 34518_1 518711. 518712.  2.78e6 2.78e6 1.21  -0.0931     1 2021-12-22 06:11:13</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="do">## 6 34518_1 518711. 518708.  2.78e6 2.78e6 4.21  -1.54       1 2021-12-22 06:11:13</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="do">## # ℹ 4 more variables: t2_ &lt;dttm&gt;, dt_ &lt;drtn&gt;, case_ &lt;lgl&gt;, step_id_ &lt;dbl&gt;</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>sr <span class="ot">&lt;-</span> steps_randr <span class="sc">%&gt;%</span> <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">ID =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">n</span>()) <span class="co">#drop NAs and create an ID column to calculate spatial pattern metrics across</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="extracting-environmental-data" class="level2">

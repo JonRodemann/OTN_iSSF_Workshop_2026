@@ -534,6 +534,7 @@ steps_obsr <- fish_trackr %>%
 ##in the actual paper we are using a 100 to 1 ratio. This will lead to lower error in the model, but take A LOT longer.
 
 # Generate random steps (10 random steps for every 1 observed step)
+set.seed(19)
 steps_randr <- steps_obsr %>%
   random_steps(n_control = 10)
 
@@ -651,12 +652,17 @@ steps_finalr <- strue %>%
     state_f = factor(state)
   ) %>% drop_na()
 
+head(steps_finalr)
+corrplot(cor(steps_finalr[,2:6]))
+
+#PLAND and division are highly correlated. Division is also correlated with pd. Let's remove division from our analysis
+
 # Fit the iSSF using conditional logistic regression (clogit).
 issf_modelr <- steps_finalr %>%
   drop_na() %>% 
   fit_clogit(case_ ~
                # Movement terms 
-               sl_ + I(sl_^2) +
+               sl_ + log(sl_) +
                cos(ta_) +
                # Habitat selection with interaction with HMM state
                pland_z * state_f + 
@@ -664,7 +670,6 @@ issf_modelr <- steps_finalr %>%
                pd_z * state_f +
                shape_mn_z * state_f +
                class * state_f +
-               division_z * state_f +
                # The required stratification term for iSSF
                strata(step_id_), model = T
   )
@@ -672,28 +677,28 @@ issf_modelr <- steps_finalr %>%
 summary(issf_modelr)
 
 ##There are no significant effects except for step length and turn angle. But because this is a workshop, we are going to
-##graph things anyway! The most single significant effect is the percentage of landscape that is dense SAV. There are no significant interaction effects, but pd and division are close 
+##graph things anyway! The most single significant effect is the complexity of the shape of the dense SAV patches. There are no significant interaction effects, but pd and shape are close 
 ##So we will go over how to graph these interactions and then we can answer any questions! 
 
 mean(steps_finalr$sl_)
 max(steps_finalr$sl_)
 min(steps_finalr$sl_)
 mean(steps_finalr$ta_)
-sl_mean <- 2.207 #mean step length (meters)
+sl_mean <- 2.222 #mean step length (meters)
 ang_mean <- 0.01 #mean turn angle (radians)
 z_mean <- 0 #mean environmental variable (z-score)
-sl_range <- seq(0.1, 27.054, length.out = 100) #range of step lengths (meters)
+sl_range <- seq(0.1, 22.56, length.out = 100) #range of step lengths (meters)
 ang_range <- seq(-3.14, 3.14, length.out = 100) #range of turn angles (radians)
 z_range <- seq(-2.1, 2.1, length.out = 100) #range of environmental variables (z-score)
 n_points <- length(sl_range) # 100
-hab_vars <- c("pland_z", "ed_z", "pd_z", "shape_mn_z", "division_z")
+hab_vars <- c("pland_z", "ed_z", "pd_z", "shape_mn_z")
 
 
 #create the dataset to test across for step length, keeping everything else constant
 tsl <- data.frame(
   sl_ = sl_range, 
   ta_ = rep(ang_mean, n_points),             
-  pland_z = rep(0, n_points), ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), division_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
+  pland_z = rep(0, n_points), ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
   state_f = factor(rep("1", n_points), levels = c("1", "2")), 
   class = factor(rep("1", n_points), levels = c("1", "2"))  
 )
@@ -703,7 +708,7 @@ tsl <- data.frame(
 msl <- data.frame(
   sl_ = sl_mean, 
   ta_ = ang_mean, 
-  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0,
   state_f = factor("1", levels = c("1", "2")),
   class = factor("1", levels = c("1", "2"))
 )
@@ -725,7 +730,7 @@ plot_sl <- ggplot(rss_sl$df, aes(x = sl_x1, y = log_rss)) +
 plot_sl
 
 
-##Looks like our fish prefer really short steps or really long ones compared to the random steps created. The random steps were
+##Looks like our fish prefer really short steps  compared to the random steps created. The random steps were
 ##created using distributions from the actual data. 
 
 #Now we can plot turn angle! 
@@ -734,7 +739,7 @@ plot_sl
 tang <- data.frame(
   sl_ = rep(sl_mean, n_points), 
   ta_ = ang_range,             
-  pland_z = rep(0, n_points), ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), division_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
+  pland_z = rep(0, n_points), ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
   state_f = factor(rep("1", n_points), levels = c("1", "2")), 
   class = factor(rep("1", n_points), levels = c("1", "2"))  
 )
@@ -743,7 +748,7 @@ tang <- data.frame(
 mang <- data.frame(
   sl_ = sl_mean, 
   ta_ = ang_mean, 
-  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0,
   state_f = factor("1", levels = c("1", "2")),
   class = factor("1", levels = c("1", "2"))
 )
@@ -766,72 +771,72 @@ plot_ang <- ggplot(rss_ang$df, aes(x = ta_x1, y = log_rss)) +
 plot_ang
 
 ##Looks like our fish liked to go less straight than the random steps. We can also do the same thing
-##for the environmental variables. Since PLAND is the most significant one, we will only show that one.
+##for the environmental variables. Since shape is the most significant one, we will only show that one.
 
-#create the dataset to test across for PLAND, keeping everything else constant
-tpland <- data.frame(
+#create the dataset to test across for shape, keeping everything else constant
+tshape <- data.frame(
   sl_ = rep(sl_mean, n_points), 
   ta_ = rep(ang_mean, n_points),             
-  pland_z = z_range, ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = rep(0, n_points), division_z = rep(0, n_points), #all of the environmental variables are centered around 0 because they are z-scored
+  pland_z = rep(0, n_points), ed_z = rep(0, n_points), pd_z = rep(0, n_points), shape_mn_z = z_range,  #all of the environmental variables are centered around 0 because they are z-scored
   state_f = factor(rep("1", n_points), levels = c("1", "2")), 
   class = factor(rep("1", n_points), levels = c("1", "2"))  
 )
 
 #1-row
-mpland <- data.frame(
+mshape <- data.frame(
   sl_ = sl_mean, 
   ta_ = ang_mean, 
-  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0,
   state_f = factor("1", levels = c("1", "2")),
   class = factor("1", levels = c("1", "2"))
 )
 
-#Calculate the log relative selection strength (log-RSS) for PLAND
-rss_pland <- log_rss(issf_modelr, x1 = tpland, x2 = mpland, ci = 'se')
+#Calculate the log relative selection strength (log-RSS) for shape
+rss_shape <- log_rss(issf_modelr, x1 = tshape, x2 = mshape, ci = 'se')
 
 
-plot_pland <- ggplot(rss_pland$df, aes(x = pland_z_x1, y = log_rss)) + 
+plot_shape <- ggplot(rss_shape$df, aes(x = shape_mn_z_x1, y = log_rss)) + 
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") + 
   geom_line(linewidth = 1.2, color = "darkblue") +
   geom_ribbon(aes(ymin = lwr, ymax = upr), alpha = 0.2, fill = "darkblue") +
   theme_bw() +
   labs(
-    title = "Log-RSS for PLAND",
-    x = "PLAND (z-score)",
+    title = "Log-RSS for Mean Shape",
+    x = "Shape_mn (z-score)",
     y = "Log Relative Selection Strength"
   )
-plot_pland
+plot_shape
 
-##Looks like our fish prefer seascapes with more dense SAV in them! Now we can look at the interactions between state and environmental variables.
+##Looks like our fish prefer seascapes with less complex patches! Now we can look at the interactions between state and environmental variables.
 ##If there was a significant result, that would mean that the fish preferred certain environmental variables when in a certain state.
-##The most significant interaction was state and division, but pd was also close. We will graph both.
+##The most significant interaction was state and shape, but pd was also close. We will graph both.
 
-#Division first
+#shape first
 
-#create the dataset to test across for both state and division, keeping everything else constant
-tdivstate <- data.frame(
+#create the dataset to test across for both state and shape, keeping everything else constant
+tshapestate <- data.frame(
   sl_ = rep(sl_mean, n_points*2), 
   ta_ = rep(ang_mean, n_points*2),             
-  pland_z = rep(0, n_points*2), ed_z = rep(0, n_points*2), pd_z = rep(0, n_points*2), shape_mn_z = rep(0, n_points*2), division_z = rep(z_range, 2), #all of the environmental variables are centered around 0 because they are z-scored
+  pland_z = rep(0, n_points*2), ed_z = rep(0, n_points*2), pd_z = rep(0, n_points*2), shape_mn_z = rep(z_range, 2),#all of the environmental variables are centered around 0 because they are z-scored
   state_f = factor(rep(c("1", "2"), each = n_points)), 
   class = factor(rep("1", n_points), levels = c("1", "2"))  
 )
 
 #1-row
-mdivstate <- data.frame(
+mshapestate <- data.frame(
   sl_ = sl_mean, 
   ta_ = ang_mean, 
-  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, division_z = 0,
+  pland_z = 0, ed_z = 0, pd_z = 0, shape_mn_z = 0, 
   state_f = factor("1", levels = c("1", "2")),
   class = factor("1", levels = c("1", "2"))
 )
 
 #Calculate the log relative selection strength (log-RSS) for both states relative to baseline
-rss_divstate <- log_rss(issf_modelr, x1 = tdivstate, x2 = mdivstate, ci = 'se')
+rss_shapestate <- log_rss(issf_modelr, x1 = tshapestate, x2 = mshapestate, ci = 'se')
 
 #separate out based on state
-df_state1 <- rss_divstate$df %>% filter(state_f_x1 == "1") %>% arrange(get("division_z_x1"))
-df_state2 <- rss_divstate$df %>% filter(state_f_x1 == "2") %>% arrange(get("division_z_x1"))
+df_state1 <- rss_shapestate$df %>% filter(state_f_x1 == "1") %>% arrange(get("shape_mn_z_x1"))
+df_state2 <- rss_shapestate$df %>% filter(state_f_x1 == "2") %>% arrange(get("shape_mn_z_x1"))
 
 #calculate SE of the difference (using a conservative approximation, ignoring covariance)
 #SE_diff = sqrt(SE_1^2 + SE_2^2)
@@ -839,7 +844,7 @@ se_diff <- sqrt(((df_state1$upr-df_state1$lwr)/3.92)^2 + ((df_state2$upr-df_stat
 
 #create a new data frame for the difference plot
 df_diff <- data.frame(
-  z_score = df_state1[["division_z_x1"]],
+  z_score = df_state1[["shape_mn_z_x1"]],
   log_rss_diff = df_state2$log_rss - df_state1$log_rss,
   # Calculate 95% CI bounds (Z-score 1.96 for 95%)
   lwr_diff = (df_state2$log_rss - df_state1$log_rss) - 1.96 * se_diff,
@@ -847,21 +852,21 @@ df_diff <- data.frame(
 )
 
 #plot the difference with confidence interval
-plot_divstate <- ggplot(df_diff, aes(x = z_score, y = log_rss_diff)) + 
+plot_shapestate <- ggplot(df_diff, aes(x = z_score, y = log_rss_diff)) + 
   geom_hline(yintercept = 0, linetype = "dashed", color = "red") +
   geom_line(linewidth = 1.2, color = "darkblue") +
   # Add the confidence interval ribbon
   geom_ribbon(aes(ymin = lwr_diff, ymax = upr_diff), alpha = 0.2, fill = "darkblue") +
   theme_bw() +
   labs(
-    title = "State-Dependent Effect: Difference in Division Selection",
-    x = "Division (z-score)",
+    title = "State-Dependent Effect: Difference in Mean Shape Selection",
+    x = "Shape_mn (z-score)",
     y = "log-RSS Difference (State 2 - State 1)"
   )
 
-plot_divstate
+plot_shapestate
 
-##Not significant, but shows that fish are more likely to be in state 2 ("foraging state") over areas with either larger dense SAV patches or little dense SAV
+##Not significant, but shows that fish are more likely to be in state 2 ("foraging state") over areas with more complex shapes
 ##So how about PD?
 
 #create the dataset to test across for both state and pd, keeping everything else constant
@@ -917,7 +922,7 @@ plot_pdstate <- ggplot(df_diff_ps, aes(x = z_score, y = log_rss_diff)) +
 
 plot_pdstate
 
-##Looks like our fish like larger patches, but areas with more of them!
+##Looks like our fish like areas with more patches while "foraging"!
 
 ##And thus concludes our workshop on going from raw acoustic telemetry data through analyses to results. Yes, yes, yes. 
 ##In the title, we said "Downloads to Discussions." So where is the discussion section? Well friends, that is up to you to interpret your data.

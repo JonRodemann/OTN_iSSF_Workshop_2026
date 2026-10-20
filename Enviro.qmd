@@ -66,6 +66,7 @@ Now that we have our observed data set up for environmental extraction and iSSF 
 
 ```{r}
 # Generate random steps (10 random steps for every 1 observed step)
+set.seed(19)
 steps_randr <- steps_obsr %>%
   random_steps(n_control = 10)
 

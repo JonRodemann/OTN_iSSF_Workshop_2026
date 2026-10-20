@@ -324,7 +324,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a><span class="do">## Wald test            = 86.35  on 13 df,   p=7e-13</span></span>
 <span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="do">## Score (logrank) test = 86.78  on 13 df,   p=6e-13</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>There are no significant effects except for step length and turn angle. But because this is a workshop, we are going to graph things anyway! The most single significant effect is the percentage of landscape that is dense SAV. There are no significant interaction effects, but pd is close. So we will go over how to graph these interactions and then we can answer any questions!</p>
+<p>There are no significant effects except for step length and turn angle. But because this is a workshop, we are going to graph things anyway! The most single significant effect is the complexity of the shape of the dense SAV patches. There are no significant interaction effects, but pd and shape are close. So we will go over how to graph these interactions and then we can answer any questions!</p>
 </section>
 <section id="graphing-results" class="level2">
 <h2 class="anchored" data-anchor-id="graphing-results">Graphing results</h2>
@@ -339,49 +339,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.0002637721</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(steps_finalr<span class="sc">$</span>ta_)</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.001113539</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>sl_mean <span class="ot">&lt;-</span> <span class="fl">2.207</span> <span class="co">#mean step length (meters)</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>sl_mean <span class="ot">&lt;-</span> <span class="fl">2.222</span> <span class="co">#mean step length (meters)</span></span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>ang_mean <span class="ot">&lt;-</span> <span class="fl">0.01</span> <span class="co">#mean turn angle (radians)</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>z_mean <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co">#mean environmental variable (z-score)</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>sl_range <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="fl">27.054</span>, <span class="at">length.out =</span> <span class="dv">100</span>) <span class="co">#range of step lengths (meters)</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>sl_range <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="fl">0.1</span>, <span class="fl">22.56</span>, <span class="at">length.out =</span> <span class="dv">100</span>) <span class="co">#range of step lengths (meters)</span></span>
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>ang_range <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">3.14</span>, <span class="fl">3.14</span>, <span class="at">length.out =</span> <span class="dv">100</span>) <span class="co">#range of turn angles (radians)</span></span>
 <span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>z_range <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="sc">-</span><span class="fl">2.1</span>, <span class="fl">2.1</span>, <span class="at">length.out =</span> <span class="dv">100</span>) <span class="co">#range of environmental variables (z-score)</span></span>
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>n_points <span class="ot">&lt;-</span> <span class="fu">length</span>(sl_range) <span class="co"># 100</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>hab_vars <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"pland_z"</span>, <span class="st">"ed_z"</span>, <span class="st">"pd_z"</span>, <span class="st">"shape_mn_z"</span>)</span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#create the dataset to test across for step length, keeping everything else constant</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>tsl <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">sl_ =</span> sl_range, </span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">ta_ =</span> <span class="fu">rep</span>(ang_mean, n_points),             </span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="at">ed_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="at">pd_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="at">shape_mn_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="co">#all of the environmental variables are centered around 0 because they are z-scored</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">state_f =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="st">"1"</span>, n_points), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>)), </span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">class =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="st">"1"</span>, n_points), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>))  </span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co">#Then we need a 1-row dataset representing a single location. This will be the same as the previous one with the sl set to the mean</span></span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>msl <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">sl_ =</span> sl_mean, </span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">ta_ =</span> ang_mean, </span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="dv">0</span>, <span class="at">ed_z =</span> <span class="dv">0</span>, <span class="at">pd_z =</span> <span class="dv">0</span>, <span class="at">shape_mn_z =</span> <span class="dv">0</span>,</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">state_f =</span> <span class="fu">factor</span>(<span class="st">"1"</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>)),</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">class =</span> <span class="fu">factor</span>(<span class="st">"1"</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>))</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate the log relative selection strength (log-RSS) for step length</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>rss_sl <span class="ot">&lt;-</span> <span class="fu">log_rss</span>(issf_modelr, <span class="at">x1 =</span> tsl, <span class="at">x2 =</span> msl, <span class="at">ci =</span> <span class="st">'se'</span>)</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a><span class="co">#We can plot the step length log-RSS curve</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>plot_sl <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(rss_sl<span class="sc">$</span>df, <span class="fu">aes</span>(<span class="at">x =</span> sl_x1, <span class="at">y =</span> log_rss)) <span class="sc">+</span> </span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span> </span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Log-RSS for Step Length (zero turn angle)"</span>,</span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Step Length (meters)"</span>,</span>
-<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Log Relative Selection Strength"</span></span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>plot_sl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#create the dataset to test across for step length, keeping everything else constant</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>tsl <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">sl_ =</span> sl_range, </span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">ta_ =</span> <span class="fu">rep</span>(ang_mean, n_points),             </span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="at">ed_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="at">pd_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="at">shape_mn_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="co">#all of the environmental variables are centered around 0 because they are z-scored</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">state_f =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="st">"1"</span>, n_points), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>)), </span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">class =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="st">"1"</span>, n_points), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>))  </span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="co">#Then we need a 1-row dataset representing a single location. This will be the same as the previous one with the sl set to the mean</span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>msl <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">sl_ =</span> sl_mean, </span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">ta_ =</span> ang_mean, </span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="dv">0</span>, <span class="at">ed_z =</span> <span class="dv">0</span>, <span class="at">pd_z =</span> <span class="dv">0</span>, <span class="at">shape_mn_z =</span> <span class="dv">0</span>,</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">state_f =</span> <span class="fu">factor</span>(<span class="st">"1"</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>)),</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">class =</span> <span class="fu">factor</span>(<span class="st">"1"</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>))</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate the log relative selection strength (log-RSS) for step length</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>rss_sl <span class="ot">&lt;-</span> <span class="fu">log_rss</span>(issf_modelr, <span class="at">x1 =</span> tsl, <span class="at">x2 =</span> msl, <span class="at">ci =</span> <span class="st">'se'</span>)</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="co">#We can plot the step length log-RSS curve</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>plot_sl <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(rss_sl<span class="sc">$</span>df, <span class="fu">aes</span>(<span class="at">x =</span> sl_x1, <span class="at">y =</span> log_rss)) <span class="sc">+</span> </span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span> </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Log-RSS for Step Length (zero turn angle)"</span>,</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Step Length (meters)"</span>,</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Log Relative Selection Strength"</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>plot_sl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -435,19 +436,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Looks like our fish liked to go less straight than the random steps. We can also do the same thing for the environmental variables. Since PLAND is the most significant one, we will only show that one.</p>
+<p>Looks like our fish liked to go less straight than the random steps. We can also do the same thing for the environmental variables. Since shape is the most significant one, we will only show that one.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create the dataset to test across for PLAND, keeping everything else constant</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>tpland <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create the dataset to test across for shape, keeping everything else constant</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>tshape <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sl_ =</span> <span class="fu">rep</span>(sl_mean, n_points), </span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ta_ =</span> <span class="fu">rep</span>(ang_mean, n_points),             </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> z_range, <span class="at">ed_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="at">pd_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="at">shape_mn_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="co">#all of the environmental variables are centered around 0 because they are z-scored</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="at">ed_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="at">pd_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points), <span class="at">shape_mn_z =</span> z_range,  <span class="co">#all of the environmental variables are centered around 0 because they are z-scored</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">state_f =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="st">"1"</span>, n_points), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>)), </span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">class =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="st">"1"</span>, n_points), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>))  </span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">#1-row</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>mpland <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>mshape <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">sl_ =</span> sl_mean, </span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">ta_ =</span> ang_mean, </span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="dv">0</span>, <span class="at">ed_z =</span> <span class="dv">0</span>, <span class="at">pd_z =</span> <span class="dv">0</span>, <span class="at">shape_mn_z =</span> <span class="dv">0</span>,</span>
@@ -455,22 +456,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">class =</span> <span class="fu">factor</span>(<span class="st">"1"</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>))</span>
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate the log relative selection strength (log-RSS) for PLAND</span></span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>rss_pland <span class="ot">&lt;-</span> <span class="fu">log_rss</span>(issf_modelr, <span class="at">x1 =</span> tpland, <span class="at">x2 =</span> mpland, <span class="at">ci =</span> <span class="st">'se'</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate the log relative selection strength (log-RSS) for shape</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>rss_shape <span class="ot">&lt;-</span> <span class="fu">log_rss</span>(issf_modelr, <span class="at">x1 =</span> tshape, <span class="at">x2 =</span> mshape, <span class="at">ci =</span> <span class="st">'se'</span>)</span>
 <span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>plot_pland <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(rss_pland<span class="sc">$</span>df, <span class="fu">aes</span>(<span class="at">x =</span> pland_z_x1, <span class="at">y =</span> log_rss)) <span class="sc">+</span> </span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>plot_shape <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(rss_shape<span class="sc">$</span>df, <span class="fu">aes</span>(<span class="at">x =</span> shape_mn_z_x1, <span class="at">y =</span> log_rss)) <span class="sc">+</span> </span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span> </span>
 <span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
 <span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lwr, <span class="at">ymax =</span> upr), <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
 <span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Log-RSS for PLAND"</span>,</span>
-<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"PLAND (z-score)"</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Log-RSS for Mean Shape"</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Shape_mn (z-score)"</span>,</span>
 <span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Log Relative Selection Strength"</span></span>
 <span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>plot_pland</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>plot_shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -479,64 +479,126 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Looks like our fish prefer seascapes with more dense SAV in them! Now we can look at the interactions between state and environmental variables. If there was a significant result, that would mean that the fish preferred certain environmental variables when in a certain state. The most significant interaction was pd and division, so let’s graph it!</p>
+<p>Looks like our fish prefer seascapes with less complex patches! Now we can look at the interactions between state and environmental variables. If there was a significant result, that would mean that the fish preferred certain environmental variables when in a certain state. The most significant interaction was state and shape, but pd was also close. We will graph both starting with shape.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create the dataset to test across for both state and pd, keeping everything else constant</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>tpdstate <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create the dataset to test across for both state and shape, keeping everything else constant</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>tshapestate <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sl_ =</span> <span class="fu">rep</span>(sl_mean, n_points<span class="sc">*</span><span class="dv">2</span>), </span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ta_ =</span> <span class="fu">rep</span>(ang_mean, n_points<span class="sc">*</span><span class="dv">2</span>),             </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points<span class="sc">*</span><span class="dv">2</span>), <span class="at">ed_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points<span class="sc">*</span><span class="dv">2</span>), <span class="at">pd_z =</span> <span class="fu">rep</span>(z_range, <span class="dv">2</span>), <span class="at">shape_mn_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points<span class="sc">*</span><span class="dv">2</span>), <span class="co">#all of the environmental variables are centered around 0 because they are z-scored</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points<span class="sc">*</span><span class="dv">2</span>), <span class="at">ed_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points<span class="sc">*</span><span class="dv">2</span>), <span class="at">pd_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points<span class="sc">*</span><span class="dv">2</span>), <span class="at">shape_mn_z =</span> <span class="fu">rep</span>(z_range, <span class="dv">2</span>),<span class="co">#all of the environmental variables are centered around 0 because they are z-scored</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">state_f =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>), <span class="at">each =</span> n_points)), </span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">class =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="st">"1"</span>, n_points), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>))  </span>
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">#1-row</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>mpdstate <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>mshapestate <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">sl_ =</span> sl_mean, </span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">ta_ =</span> ang_mean, </span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="dv">0</span>, <span class="at">ed_z =</span> <span class="dv">0</span>, <span class="at">pd_z =</span> <span class="dv">0</span>, <span class="at">shape_mn_z =</span> <span class="dv">0</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="dv">0</span>, <span class="at">ed_z =</span> <span class="dv">0</span>, <span class="at">pd_z =</span> <span class="dv">0</span>, <span class="at">shape_mn_z =</span> <span class="dv">0</span>, </span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">state_f =</span> <span class="fu">factor</span>(<span class="st">"1"</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>)),</span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">class =</span> <span class="fu">factor</span>(<span class="st">"1"</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>))</span>
 <span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate the log relative selection strength (log-RSS) for both states relative to baseline</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>rss_pdstate <span class="ot">&lt;-</span> <span class="fu">log_rss</span>(issf_modelr, <span class="at">x1 =</span> tpdstate, <span class="at">x2 =</span> mpdstate, <span class="at">ci =</span> <span class="st">'se'</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>rss_shapestate <span class="ot">&lt;-</span> <span class="fu">log_rss</span>(issf_modelr, <span class="at">x1 =</span> tshapestate, <span class="at">x2 =</span> mshapestate, <span class="at">ci =</span> <span class="st">'se'</span>)</span>
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">#separate out based on state</span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>df_state1_ps <span class="ot">&lt;-</span> rss_pdstate<span class="sc">$</span>df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(state_f_x1 <span class="sc">==</span> <span class="st">"1"</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">get</span>(<span class="st">"pd_z_x1"</span>))</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>df_state2_ps <span class="ot">&lt;-</span> rss_pdstate<span class="sc">$</span>df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(state_f_x1 <span class="sc">==</span> <span class="st">"2"</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">get</span>(<span class="st">"pd_z_x1"</span>))</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>df_state1 <span class="ot">&lt;-</span> rss_shapestate<span class="sc">$</span>df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(state_f_x1 <span class="sc">==</span> <span class="st">"1"</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">get</span>(<span class="st">"shape_mn_z_x1"</span>))</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>df_state2 <span class="ot">&lt;-</span> rss_shapestate<span class="sc">$</span>df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(state_f_x1 <span class="sc">==</span> <span class="st">"2"</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">get</span>(<span class="st">"shape_mn_z_x1"</span>))</span>
 <span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate SE of the difference (using a conservative approximation, ignoring covariance)</span></span>
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co">#SE_diff = sqrt(SE_1^2 + SE_2^2)</span></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>se_diff_ps <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(((df_state1_ps<span class="sc">$</span>upr<span class="sc">-</span>df_state1_ps<span class="sc">$</span>lwr)<span class="sc">/</span><span class="fl">3.92</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> ((df_state2_ps<span class="sc">$</span>upr<span class="sc">-</span>df_state2_ps<span class="sc">$</span>lwr)<span class="sc">/</span><span class="fl">3.92</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>se_diff <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(((df_state1<span class="sc">$</span>upr<span class="sc">-</span>df_state1<span class="sc">$</span>lwr)<span class="sc">/</span><span class="fl">3.92</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> ((df_state2<span class="sc">$</span>upr<span class="sc">-</span>df_state2<span class="sc">$</span>lwr)<span class="sc">/</span><span class="fl">3.92</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
 <span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co">#create a new data frame for the difference plot</span></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>df_diff_ps <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">z_score =</span> df_state1_ps[[<span class="st">"pd_z_x1"</span>]],</span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_rss_diff =</span> df_state2_ps<span class="sc">$</span>log_rss <span class="sc">-</span> df_state1_ps<span class="sc">$</span>log_rss,</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>df_diff <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">z_score =</span> df_state1[[<span class="st">"shape_mn_z_x1"</span>]],</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_rss_diff =</span> df_state2<span class="sc">$</span>log_rss <span class="sc">-</span> df_state1<span class="sc">$</span>log_rss,</span>
 <span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate 95% CI bounds (Z-score 1.96 for 95%)</span></span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwr_diff =</span> (df_state2_ps<span class="sc">$</span>log_rss <span class="sc">-</span> df_state1_ps<span class="sc">$</span>log_rss) <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> se_diff_ps,</span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">upr_diff =</span> (df_state2_ps<span class="sc">$</span>log_rss <span class="sc">-</span> df_state1_ps<span class="sc">$</span>log_rss) <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> se_diff_ps</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwr_diff =</span> (df_state2<span class="sc">$</span>log_rss <span class="sc">-</span> df_state1<span class="sc">$</span>log_rss) <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> se_diff,</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">upr_diff =</span> (df_state2<span class="sc">$</span>log_rss <span class="sc">-</span> df_state1<span class="sc">$</span>log_rss) <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> se_diff</span>
 <span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="co">#plot the difference with confidence interval</span></span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>plot_pdstate <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_diff_ps, <span class="fu">aes</span>(<span class="at">x =</span> z_score, <span class="at">y =</span> log_rss_diff)) <span class="sc">+</span> </span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>plot_shapestate <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_diff, <span class="fu">aes</span>(<span class="at">x =</span> z_score, <span class="at">y =</span> log_rss_diff)) <span class="sc">+</span> </span>
 <span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
 <span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
 <span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add the confidence interval ribbon</span></span>
 <span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lwr_diff, <span class="at">ymax =</span> upr_diff), <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
 <span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
 <span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"State-Dependent Effect: Difference in PD Selection"</span>,</span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"PD (z-score)"</span>,</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"State-Dependent Effect: Difference in Mean Shape Selection"</span>,</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Shape_mn (z-score)"</span>,</span>
 <span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"log-RSS Difference (State 2 - State 1)"</span></span>
 <span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>plot_pdstate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>plot_shapestate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
 <p><img src="iSSF_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Not significant, but shows that fish are more likely to be in state 2 (“foraging state”) over areas with more complex shapes So how about PD?</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#create the dataset to test across for both state and pd, keeping everything else constant</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>tpdstate <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">sl_ =</span> <span class="fu">rep</span>(sl_mean, n_points<span class="sc">*</span><span class="dv">2</span>), </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ta_ =</span> <span class="fu">rep</span>(ang_mean, n_points<span class="sc">*</span><span class="dv">2</span>),             </span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points<span class="sc">*</span><span class="dv">2</span>), <span class="at">ed_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points<span class="sc">*</span><span class="dv">2</span>), <span class="at">pd_z =</span> <span class="fu">rep</span>(z_range, <span class="dv">2</span>), <span class="at">shape_mn_z =</span> <span class="fu">rep</span>(<span class="dv">0</span>, n_points<span class="sc">*</span><span class="dv">2</span>), <span class="co">#all of the environmental variables are centered around 0 because they are z-scored</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">state_f =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>), <span class="at">each =</span> n_points)), </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">class =</span> <span class="fu">factor</span>(<span class="fu">rep</span>(<span class="st">"1"</span>, n_points), <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>))  </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">#1-row</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>mpdstate <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">sl_ =</span> sl_mean, </span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">ta_ =</span> ang_mean, </span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">pland_z =</span> <span class="dv">0</span>, <span class="at">ed_z =</span> <span class="dv">0</span>, <span class="at">pd_z =</span> <span class="dv">0</span>, <span class="at">shape_mn_z =</span> <span class="dv">0</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">state_f =</span> <span class="fu">factor</span>(<span class="st">"1"</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>)),</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">class =</span> <span class="fu">factor</span>(<span class="st">"1"</span>, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"1"</span>, <span class="st">"2"</span>))</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co">#Calculate the log relative selection strength (log-RSS) for both states relative to baseline</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>rss_pdstate <span class="ot">&lt;-</span> <span class="fu">log_rss</span>(issf_modelr, <span class="at">x1 =</span> tpdstate, <span class="at">x2 =</span> mpdstate, <span class="at">ci =</span> <span class="st">'se'</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#separate out based on state</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>df_state1_ps <span class="ot">&lt;-</span> rss_pdstate<span class="sc">$</span>df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(state_f_x1 <span class="sc">==</span> <span class="st">"1"</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">get</span>(<span class="st">"pd_z_x1"</span>))</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>df_state2_ps <span class="ot">&lt;-</span> rss_pdstate<span class="sc">$</span>df <span class="sc">%&gt;%</span> <span class="fu">filter</span>(state_f_x1 <span class="sc">==</span> <span class="st">"2"</span>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">get</span>(<span class="st">"pd_z_x1"</span>))</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a><span class="co">#calculate SE of the difference (using a conservative approximation, ignoring covariance)</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="co">#SE_diff = sqrt(SE_1^2 + SE_2^2)</span></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>se_diff_ps <span class="ot">&lt;-</span> <span class="fu">sqrt</span>(((df_state1_ps<span class="sc">$</span>upr<span class="sc">-</span>df_state1_ps<span class="sc">$</span>lwr)<span class="sc">/</span><span class="fl">3.92</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> ((df_state2_ps<span class="sc">$</span>upr<span class="sc">-</span>df_state2_ps<span class="sc">$</span>lwr)<span class="sc">/</span><span class="fl">3.92</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="co">#create a new data frame for the difference plot</span></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>df_diff_ps <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">z_score =</span> df_state1_ps[[<span class="st">"pd_z_x1"</span>]],</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_rss_diff =</span> df_state2_ps<span class="sc">$</span>log_rss <span class="sc">-</span> df_state1_ps<span class="sc">$</span>log_rss,</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Calculate 95% CI bounds (Z-score 1.96 for 95%)</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">lwr_diff =</span> (df_state2_ps<span class="sc">$</span>log_rss <span class="sc">-</span> df_state1_ps<span class="sc">$</span>log_rss) <span class="sc">-</span> <span class="fl">1.96</span> <span class="sc">*</span> se_diff_ps,</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">upr_diff =</span> (df_state2_ps<span class="sc">$</span>log_rss <span class="sc">-</span> df_state1_ps<span class="sc">$</span>log_rss) <span class="sc">+</span> <span class="fl">1.96</span> <span class="sc">*</span> se_diff_ps</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a><span class="co">#plot the difference with confidence interval</span></span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>plot_pdstate <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df_diff_ps, <span class="fu">aes</span>(<span class="at">x =</span> z_score, <span class="at">y =</span> log_rss_diff)) <span class="sc">+</span> </span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">0</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">1.2</span>, <span class="at">color =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add the confidence interval ribbon</span></span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lwr_diff, <span class="at">ymax =</span> upr_diff), <span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">fill =</span> <span class="st">"darkblue"</span>) <span class="sc">+</span></span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"State-Dependent Effect: Difference in PD Selection"</span>,</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"PD (z-score)"</span>,</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"log-RSS Difference (State 2 - State 1)"</span></span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>plot_pdstate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="iSSF_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
