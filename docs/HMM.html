@@ -251,7 +251,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="do">## #   Year &lt;dbl&gt;, Month &lt;dbl&gt;, Day &lt;dbl&gt;, Hour &lt;dbl&gt;, Minute &lt;dbl&gt;, Second &lt;dbl&gt;,</span></span>
 <span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="do">## #   trackstart &lt;chr&gt;, track &lt;dbl&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The model expects at least these columns: tag : individual identifier track : track number/ID for that individual’s track segment ts : timestamp string x, y : coordinates (assumed UTM/metres). If they’re lat/long, convert to projected meters first.</p>
+<p>The model expects at least these columns:<br>
+tag : individual identifier<br>
+track : track number/ID for that individual’s track segment<br>
+ts : timestamp string<br>
+x, y : coordinates (assumed UTM/metres). If they’re lat/long, convert to projected meters first.</p>
 </section>
 <section id="interpolation-of-tracks-to-a-regular-time-interval" class="level2">
 <h2 class="anchored" data-anchor-id="interpolation-of-tracks-to-a-regular-time-interval">Interpolation of tracks to a regular time interval</h2>
@@ -421,7 +425,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>sl_init_mean <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fl">1.9</span><span class="sc">/</span><span class="fl">0.6</span>, <span class="fl">1.5</span><span class="sc">/</span><span class="fl">0.9</span>) <span class="co">#initial means should be the shape/rate for both</span></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>sl_init_sd <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(<span class="fl">1.9</span>)<span class="sc">/</span><span class="fl">0.6</span>, <span class="fu">sqrt</span>(<span class="fl">1.5</span>)<span class="sc">/</span><span class="fl">0.9</span>) <span class="co">#initial standard deviations should be square root of shape/rate</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>This is a little subjective, but there is a good starting out point. The first curve encompasses the lower step lengths well.The third curve does not really do a good job because it is spread out too far. So let’s go with the first and second curves</p>
+<p>This is a little subjective, but there is a good starting out point. The first curve encompasses the lower step lengths well. The third curve does not really do a good job because it is spread out too far. So let’s go with the first and second curves.</p>
 <p>Now we do the same thing for the turn angles. However, we want the model to try to find states with opposite turn angles (turn 180 degrees vs straight). Therefore, we will play with the numbers a little.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(hmm_data_30<span class="sc">$</span>angle, <span class="at">breaks =</span> <span class="dv">30</span>, <span class="at">freq =</span> F, <span class="at">main =</span> <span class="st">"Turn angles"</span>)</span>
@@ -526,7 +530,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Looking at the step length and angle distributions, you can see a few things. State 1 is categorized by longer step lengths (average of 4 meters) and straight turn angles (0.007 radians, basically zero). State 2, on the other hand, has a much shorter step length (average of 0.9 meters) but a similar turn angle (-0.02 radians). However, the concentration is a lot lower, so state 2 encompasses the larger turn angles. These results also give you a transistion probability to transition between states. Pretty low for both, but it does happen. If you run the following code, you can visualize the distributions for each state as well as which state each step on all the tracks is! Since that is 59 tracks, we won’t run it online but we will go through it in the workshop</p>
+<p>Looking at the step length and angle distributions, you can see a few things. State 1 is categorized by longer step lengths (average of 4 meters) and straight turn angles (0.007 radians, basically zero). State 2, on the other hand, has a much shorter step length (average of 0.9 meters) but a similar turn angle (-0.02 radians). However, the concentration (how much space is under the curve towards the sides) is a lot lower, so state 2 includes the larger turn angles. These results also give you a transistion probability to transition between states. Pretty low for both, but it does happen. If you run the following code, you can visualize the distributions for each state as well as the state breakdown for each track! Since that is 59 tracks, we won’t run it online but we will go through it in the workshop.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># statecol &lt;- c('lightblue', 'purple1')</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plot(mod, col = statecol)</span></span>

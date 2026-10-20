@@ -35,10 +35,10 @@ dat <- dat %>%
 head(dat)
 ```
 
-The model expects at least these columns:
-  tag          : individual identifier
-  track        : track number/ID for that individual's track segment
-  ts           : timestamp string 
+The model expects at least these columns:\
+  tag          : individual identifier\
+  track        : track number/ID for that individual's track segment\
+  ts           : timestamp string \
   x, y         : coordinates (assumed UTM/metres). If they're lat/long, convert to projected meters first.
 
 ## Interpolation of tracks to a regular time interval
@@ -179,7 +179,7 @@ sl_init_mean <- c(1.9/0.6, 1.5/0.9) #initial means should be the shape/rate for 
 sl_init_sd <- c(sqrt(1.9)/0.6, sqrt(1.5)/0.9) #initial standard deviations should be square root of shape/rate
 ```
 
-This is a little subjective, but there is a good starting out point. The first curve encompasses the lower step lengths well.The third curve does not really do a good job because it is spread out too far. So let's go with the first and second curves
+This is a little subjective, but there is a good starting out point. The first curve encompasses the lower step lengths well. The third curve does not really do a good job because it is spread out too far. So let's go with the first and second curves.
 
 Now we do the same thing for the turn angles. However, we want the model to try to find states with opposite turn angles (turn 180 degrees vs straight). Therefore, we will play with the numbers a little.
 
@@ -209,7 +209,7 @@ mod
 mod %>% plotPR() #gives the goodness of fit. Looks pretty good!
 ```
 
-Looking at the step length and angle distributions, you can see a few things. State 1 is categorized by longer step lengths (average of 4 meters) and straight turn angles (0.007 radians, basically zero). State 2, on the other hand, has a much shorter step length (average of 0.9 meters) but a similar turn angle (-0.02 radians). However, the concentration is a lot lower, so state 2 encompasses the larger turn angles. These results also give you a transistion probability to transition between states. Pretty low for both, but it does happen. If you run the following code, you can visualize the distributions for each state as well as which state each step on all the tracks is! Since that is 59 tracks, we won't run it online but we will go through it in the workshop
+Looking at the step length and angle distributions, you can see a few things. State 1 is categorized by longer step lengths (average of 4 meters) and straight turn angles (0.007 radians, basically zero). State 2, on the other hand, has a much shorter step length (average of 0.9 meters) but a similar turn angle (-0.02 radians). However, the concentration (how much space is under the curve towards the sides) is a lot lower, so state 2 includes the larger turn angles. These results also give you a transistion probability to transition between states. Pretty low for both, but it does happen. If you run the following code, you can visualize the distributions for each state as well as the state breakdown for each track! Since that is 59 tracks, we won't run it online but we will go through it in the workshop.
 
 ```{r}
 # statecol <- c('lightblue', 'purple1')
