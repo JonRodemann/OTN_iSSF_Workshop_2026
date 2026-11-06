@@ -33,7 +33,7 @@ iSSFs are a type of resource selection function, defined as a function that prod
 
 [Workshop GitHub](https://github.com/JonRodemann/OTN_iSSF_Workshop_2026) – Website that houses data and code for our workshop\
 
-[Workshop slides](RSF Workshop OTN 2024_09_23.pdf)\
+[Workshop slides](Workshop_presentation_OTN_2026_iSSF.pdf)\
 
 ### YAPS publications:
 
