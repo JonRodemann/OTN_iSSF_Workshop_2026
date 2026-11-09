@@ -157,8 +157,9 @@ library(scales)
 library(ggmap)
 library(sf)
 library(tidyverse)
+library(readr)
 
-data <- sfheadersdata <- read_csv('data/fish_positions.csv')
+data <- read_csv('data/fish_positions.csv')
 head(data)
 ```
 
@@ -179,6 +180,8 @@ dat_10 <- data %>% filter(E < 10)
 #number of positions per fish
 dat_10 %>% group_by(tag) %>% summarize(n = n())
 
+#set your options so you can see milliseconds
+options(digits.secs = 3)
 #abacus plot for positions
 dat_10$ts <- as.POSIXct(dat_10$ts, format = '%Y-%m-%dT%H:%M:%OS')
 
